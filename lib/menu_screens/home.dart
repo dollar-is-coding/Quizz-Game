@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:quizz_game_is_that_you/the_others/question.dart';
+import 'package:quizz_game_is_that_you/the_others/topic.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -18,10 +19,6 @@ class _HomeScreenState extends State<HomeScreen> {
   DateFormat formattedDate = DateFormat('dd-MM-yyyy');
   DateTime today = DateTime.now();
   late int played;
-  @override
-  void initState() {
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -293,13 +290,14 @@ class _HomeScreenState extends State<HomeScreen> {
                     (user) {
                       Timestamp t = user['joined'] as Timestamp;
                       DateTime date = t.toDate();
-                      // if (user['${today.day}-${today.month}-${today.year}'] !=
-                      //     1) {
-                      //   users.doc(_authMail).update(
-                      //       {'${today.day}-${today.month}-${today.year}': 0});
-                      // }
-                      // played =
-                      //     user['${today.day}-${today.month}-${today.year}'];
+                      if (user['${today.day}-${today.month}-${today.year}'] !=
+                          1) {
+                        users.doc(_authMail).update(
+                            {'${today.day}-${today.month}-${today.year}': 0});
+                        played =
+                            user['${today.day}-${today.month}-${today.year}'];
+                      }
+
                       return Align(
                         alignment: Alignment.topCenter,
                         child: Text(
@@ -369,7 +367,14 @@ class _HomeScreenState extends State<HomeScreen> {
         width: double.infinity,
         height: MediaQuery.of(context).size.height * 0.073,
         child: ElevatedButton(
-          onPressed: () {},
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => TopicScreen(),
+              ),
+            );
+          },
           style: ElevatedButton.styleFrom(
             backgroundColor: const Color.fromARGB(255, 202, 221, 255),
             shape: RoundedRectangleBorder(

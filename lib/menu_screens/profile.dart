@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:quizz_game_is_that_you/the_others/edit_profile.dart';
 
 class ProfileScreen extends StatefulWidget {
   @override
@@ -134,7 +135,14 @@ class ProfileState extends State<ProfileScreen> {
                   width: MediaQuery.of(context).size.width * 0.25,
                   height: 35,
                   child: ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => EditProfileScreen(),
+                        ),
+                      );
+                    },
                     style: ElevatedButton.styleFrom(
                         backgroundColor: const Color.fromARGB(255, 5, 33, 71),
                         shape: RoundedRectangleBorder(
