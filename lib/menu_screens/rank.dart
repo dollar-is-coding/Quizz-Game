@@ -138,6 +138,7 @@ class RankScreen extends StatelessWidget {
     );
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         elevation: 0,
         centerTitle: true,
         title: Text(

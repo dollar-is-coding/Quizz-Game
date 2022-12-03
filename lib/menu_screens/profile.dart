@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -9,69 +10,85 @@ class ProfileScreen extends StatefulWidget {
 class ProfileState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
-    int coin = 1000;
-    int score = 2000;
-
-    SizedBox showAchievement(String achievement, IconData icon, Color color) {
-      return SizedBox(
-        width: MediaQuery.of(context).size.width * 0.3,
-        height: MediaQuery.of(context).size.height * 0.045,
-        child: TextField(
-          readOnly: true,
-          textAlign: TextAlign.left,
-          decoration: InputDecoration(
-            hoverColor: Colors.white,
-            fillColor: Colors.white,
-            filled: true,
-            contentPadding: const EdgeInsets.all(0),
-            prefixIcon: Icon(
-              icon,
-              color: color,
-            ),
-            hintText: achievement,
-            hintStyle: GoogleFonts.poppins(
-              fontWeight: FontWeight.w500,
-              fontSize: 14,
-              color: const Color.fromARGB(255, 5, 33, 71),
-            ),
-            border: const OutlineInputBorder(),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(20),
-              borderSide: const BorderSide(
-                color: Color.fromARGB(255, 153, 185, 255),
-              ),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderSide: const BorderSide(
-                color: Color.fromARGB(255, 153, 185, 255),
-              ),
-              borderRadius: BorderRadius.circular(20),
-            ),
-            //prefixIcon: Icon(Icons.person),
+    Widget signOutDialog = AlertDialog(
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(
+          Radius.circular(10),
+        ),
+      ),
+      backgroundColor: const Color.fromARGB(255, 5, 33, 71),
+      title: Padding(
+        padding: const EdgeInsets.only(bottom: 20),
+        child: Text(
+          'SIGN OUT',
+          textAlign: TextAlign.center,
+          style: GoogleFonts.poppins(
+            fontSize: 15,
+            color: Colors.white,
+            fontWeight: FontWeight.w500,
           ),
         ),
-      );
-    }
-
-    Widget scoreSection = Padding(
-      padding: const EdgeInsets.only(bottom: 15),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-          showAchievement(
-            coin.toString(),
-            Icons.eco_rounded,
-            const Color.fromARGB(255, 204, 193, 79),
-          ),
-          showAchievement(
-            score.toString(),
-            Icons.brightness_low_rounded,
-            const Color.fromARGB(255, 255, 210, 48),
-          ),
-        ],
       ),
+      content: Wrap(children: [
+        Text(
+          textAlign: TextAlign.center,
+          'Are you sure to sign out ?',
+          style: GoogleFonts.poppins(
+            fontSize: 17,
+            color: Colors.white,
+          ),
+        ),
+      ]),
+      actions: [
+        Padding(
+          padding: const EdgeInsets.only(bottom: 20),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              SizedBox(
+                height: 40,
+                child: ElevatedButton(
+                  onPressed: () => Navigator.pop(context),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color.fromARGB(255, 129, 169, 105),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15),
+                    ),
+                  ),
+                  child: Text(
+                    'Cancel',
+                    style: GoogleFonts.poppins(
+                      fontSize: 15,
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(
+                width: MediaQuery.of(context).size.width * 0.22,
+                height: 40,
+                child: ElevatedButton(
+                  onPressed: () {
+                    FirebaseAuth.instance.signOut();
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color.fromARGB(255, 255, 0, 0),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15),
+                    ),
+                  ),
+                  child: Text(
+                    'OK',
+                    style: GoogleFonts.poppins(
+                      fontSize: 15,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
     );
-
     Widget infoSection = Container(
       padding: const EdgeInsets.fromLTRB(10, 20, 10, 0),
       child: Row(
@@ -179,11 +196,39 @@ class ProfileState extends State<ProfileScreen> {
     );
 
     return Scaffold(
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        elevation: 0,
+        centerTitle: true,
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            TextButton(
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  builder: (context) {
+                    return signOutDialog;
+                  },
+                );
+              },
+              child: Text(
+                'Sign Out',
+                style: GoogleFonts.poppins(
+                  color: const Color.fromARGB(255, 5, 33, 71),
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+          ],
+        ),
+        backgroundColor: const Color.fromARGB(255, 237, 243, 255),
+      ),
+      extendBody: true,
       body: Padding(
-        padding: const EdgeInsets.fromLTRB(15, 15, 15, 5),
+        padding: const EdgeInsets.fromLTRB(15, 0, 15, 5),
         child: Column(
           children: [
-            scoreSection,
             infoSection,
             nameStatisticSection,
             Expanded(

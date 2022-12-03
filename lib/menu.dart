@@ -15,18 +15,18 @@ class MainMenuScreenState extends State<MainMenuScreen> {
   int index = 0;
   final screens = [
     HomeScreen(),
-    ProfileScreen(),
     HistoryScreen(),
     RankScreen(),
+    ProfileScreen(),
   ];
   @override
   Widget build(BuildContext context) {
     final user = FirebaseAuth.instance.currentUser!;
     final items = <Widget>[
       const Icon(Icons.home_rounded, size: 35),
-      const Icon(Icons.person_rounded, size: 35),
       const Icon(Icons.history_rounded, size: 35),
       const Icon(Icons.emoji_events_rounded, size: 35),
+      const Icon(Icons.person_rounded, size: 35),
     ];
 
     return SafeArea(

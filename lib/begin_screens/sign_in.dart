@@ -1,9 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:quizz_game_is_that_you/begin_screens/forgot_password.dart';
 import 'package:quizz_game_is_that_you/utils.dart';
+import 'dart:math';
 
 class SignInScreen extends StatefulWidget {
   @override
@@ -15,6 +17,14 @@ class SignInScreenState extends State<SignInScreen> {
   TextEditingController passwordController = TextEditingController();
   TextEditingController confirmPasswordController = TextEditingController();
   bool isSignIn = true;
+  CollectionReference users = FirebaseFirestore.instance.collection('Users');
+  CollectionReference ranks = FirebaseFirestore.instance.collection('Ranks');
+  final _chars =
+      'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
+  final Random _rnd = Random();
+
+  String getRandomString(int length) => String.fromCharCodes(Iterable.generate(
+      length, (_) => _chars.codeUnitAt(_rnd.nextInt(_chars.length))));
   @override
   Widget build(BuildContext context) {
     Future _SignIn() async {
@@ -34,6 +44,13 @@ class SignInScreenState extends State<SignInScreen> {
           email: emailController.text.trim(),
           password: passwordController.text.trim(),
         );
+        users.doc(emailController.text.trim()).set({
+          'username': getRandomString(10),
+          'email': emailController.text.trim(),
+          'joined': DateTime.now(),
+          'leaves': 100,
+          'suns': 0
+        });
       } on FirebaseAuthException catch (e) {
         Utils.showSnackBar(e.message);
       }
@@ -435,7 +452,7 @@ class SignInScreenState extends State<SignInScreen> {
                     autovalidateMode: AutovalidateMode.onUserInteraction,
                     validator: (value) =>
                         value != null && value != passwordController.text
-                            ? 'Confirm password doesn\'t fit password'
+                            ? 'Password and confirm password doesnt match'
                             : null,
                     decoration: InputDecoration(
                       errorBorder: OutlineInputBorder(
