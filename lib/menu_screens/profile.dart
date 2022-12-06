@@ -30,16 +30,18 @@ class ProfileState extends State<ProfileScreen> {
           ),
         ),
       ),
-      content: Wrap(children: [
-        Text(
-          textAlign: TextAlign.center,
-          'Are you sure to sign out ?',
-          style: GoogleFonts.poppins(
-            fontSize: 17,
-            color: Colors.white,
+      content: Wrap(
+        children: [
+          Text(
+            textAlign: TextAlign.center,
+            'Are you sure to sign out ?',
+            style: GoogleFonts.poppins(
+              fontSize: 17,
+              color: Colors.white,
+            ),
           ),
-        ),
-      ]),
+        ],
+      ),
       actions: [
         Padding(
           padding: const EdgeInsets.only(bottom: 20),
@@ -70,6 +72,7 @@ class ProfileState extends State<ProfileScreen> {
                 child: ElevatedButton(
                   onPressed: () {
                     FirebaseAuth.instance.signOut();
+                    Navigator.pop(context);
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color.fromARGB(255, 255, 0, 0),

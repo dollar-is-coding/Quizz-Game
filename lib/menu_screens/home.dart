@@ -1,10 +1,7 @@
-import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:intl/intl.dart';
 import 'package:quizz_game_is_that_you/the_others/question.dart';
 import 'package:quizz_game_is_that_you/the_others/topic.dart';
 
@@ -16,9 +13,8 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final _authMail = FirebaseAuth.instance.currentUser!.email;
   final users = FirebaseFirestore.instance.collection('Users');
-  DateFormat formattedDate = DateFormat('dd-MM-yyyy');
-  DateTime today = DateTime.now();
-  late int played;
+  final singles = FirebaseFirestore.instance.collection('Single');
+  late String username;
 
   @override
   Widget build(BuildContext context) {
@@ -42,40 +38,80 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       content: Text(
         textAlign: TextAlign.center,
-        'You have played today!\nSee you tomorrow!',
+        'You can play multiple times!\nHowever, every time you start, your achiverment is reseted!',
         style: GoogleFonts.poppins(
           color: Colors.white,
           fontSize: 15,
         ),
       ),
       actions: [
-        Padding(
-          padding: const EdgeInsets.only(bottom: 20),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              SizedBox(
-                width: MediaQuery.of(context).size.width * 0.22,
-                height: 40,
-                child: ElevatedButton(
-                  onPressed: () => Navigator.pop(context),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color.fromARGB(255, 129, 169, 105),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(0, 0, 20, 20),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.22,
+                    height: 40,
+                    child: ElevatedButton(
+                      onPressed: () => Navigator.pop(context),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color.fromARGB(255, 255, 0, 0),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                      ),
+                      child: Text(
+                        'Cancel',
+                        style: GoogleFonts.poppins(
+                          fontSize: 15,
+                        ),
+                      ),
                     ),
                   ),
-                  child: Text(
-                    'OK',
-                    style: GoogleFonts.poppins(
-                      fontSize: 15,
-                    ),
-                  ),
-                ),
+                ],
               ),
-            ],
-          ),
-        ),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 0, 0, 20),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.22,
+                    height: 40,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => QuestionScreen(username),
+                          ),
+                        );
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor:
+                            const Color.fromARGB(255, 129, 169, 105),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                      ),
+                      child: Text(
+                        'OK',
+                        style: GoogleFonts.poppins(
+                          fontSize: 15,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        )
       ],
     );
     Widget findRoomDialogSection = AlertDialog(
@@ -288,13 +324,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 return Column(
                   children: snapshot.data!.docs.map(
                     (user) {
-                      if (user['${today.day}-${today.month}-${today.year}'] !=
-                          1) {
-                        users.doc(_authMail).update(
-                            {'${today.day}-${today.month}-${today.year}': 0});
-                        played =
-                            user['${today.day}-${today.month}-${today.year}'];
-                      }
+                      username = user['username'];
                       return Align(
                         alignment: Alignment.topCenter,
                         child: Text(
@@ -323,21 +353,12 @@ class _HomeScreenState extends State<HomeScreen> {
         height: MediaQuery.of(context).size.height * 0.073,
         child: ElevatedButton(
           onPressed: () {
-            if (played == 0) {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => QuestionScreen(),
-                ),
-              );
-            } else {
-              showDialog(
-                context: context,
-                builder: (context) {
-                  return singleSection;
-                },
-              );
-            }
+            showDialog(
+              context: context,
+              builder: (context) {
+                return singleSection;
+              },
+            );
           },
           style: ElevatedButton.styleFrom(
             backgroundColor: const Color.fromARGB(255, 202, 221, 255),
