@@ -291,15 +291,15 @@ class _HomeScreenState extends State<HomeScreen> {
                 return Column(
                   children: snapshot.data!.docs.map(
                     (user) {
-                      Timestamp t = user['joined'] as Timestamp;
-                      DateTime date = t.toDate();
-                      if (user['${today.day}-${today.month}-${today.year}'] !=
-                          1) {
-                        users.doc(_authMail).update(
-                            {'${today.day}-${today.month}-${today.year}': 0});
-                      }
-                      played =
-                          user['${today.day}-${today.month}-${today.year}'];
+                      // Timestamp t = user['joined'] as Timestamp;
+                      // DateTime date = t.toDate();
+                      // if (user['${today.day}-${today.month}-${today.year}'] !=
+                      //     1) {
+                      //   users.doc(_authMail).update(
+                      //       {'${today.day}-${today.month}-${today.year}': 0});
+                      // }
+                      // played =
+                      //     user['${today.day}-${today.month}-${today.year}'];
                       return Align(
                         alignment: Alignment.topCenter,
                         child: Text(
