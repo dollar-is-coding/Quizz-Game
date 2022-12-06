@@ -2,12 +2,28 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+class Topic {
+  String topic;
+  Topic(this.topic);
+}
+
 class TopicScreen extends StatelessWidget {
+  TopicScreen([Key? key]) : super(key: key);
+  List<Topic> topics = [
+    Topic('History'),
+    Topic('Art'),
+    Topic('Geography'),
+    Topic('History'),
+    Topic('Literality'),
+    Topic('Science'),
+    Topic('Funny'),
+  ];
   @override
   Widget build(BuildContext context) {
     Widget titleSection = ListView.builder(
-      itemCount: 6,
+      itemCount: topics.length,
       itemBuilder: (context, index) {
+        final item = topics[index];
         return Padding(
           padding: const EdgeInsets.fromLTRB(15, 0, 15, 0),
           child: Card(
@@ -47,7 +63,7 @@ class TopicScreen extends StatelessWidget {
                           Padding(
                             padding: const EdgeInsets.fromLTRB(5, 0, 0, 3),
                             child: Text(
-                              'Science',
+                              item.topic,
                               style: GoogleFonts.poppins(
                                 fontWeight: FontWeight.normal,
                                 fontSize: 20,
