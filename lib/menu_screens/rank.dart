@@ -1,8 +1,30 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class RankScreen extends StatelessWidget {
+class RankScreen extends StatefulWidget {
   @override
+  State<StatefulWidget> createState() {
+    return RankScreenState();
+  }
+}
+
+class RankScreenState extends State<RankScreen> {
+  // DateTime today = DateTime.now();
+  // final _authMail = FirebaseAuth.instance.currentUser!.email;
+  // var users = FirebaseFirestore.instance.collection('Users');
+  // var ranks = FirebaseFirestore.instance.collection('Ranks');
+  @override
+  // void initState() {
+  //   super.initState();
+  //   users
+  //       .doc(_authMail)
+  //       .update({'${today.day}-${today.month}-${today.year}': 1, 'suns': 0});
+  //   ranks.doc(_authMail).set({'${today.day}-${today.month}-${today.year}': 0});
+  // }
+
   Widget build(BuildContext context) {
     Widget top3Section = Padding(
       padding: const EdgeInsets.fromLTRB(15, 0, 15, 15),
