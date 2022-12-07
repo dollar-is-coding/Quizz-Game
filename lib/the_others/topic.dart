@@ -1,6 +1,6 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:quizz_game_is_that_you/the_others/matching.dart';
 
 class Topic {
   String topic;
@@ -13,10 +13,9 @@ class TopicScreen extends StatelessWidget {
     Topic('History'),
     Topic('Art'),
     Topic('Geography'),
-    Topic('History'),
     Topic('Literality'),
     Topic('Science'),
-    Topic('Funny'),
+    Topic('funny question'),
   ];
   @override
   Widget build(BuildContext context) {
@@ -34,12 +33,12 @@ class TopicScreen extends StatelessWidget {
               height: MediaQuery.of(context).size.height * 0.16,
               child: ElevatedButton(
                 onPressed: () {
-                  // Navigator.push(
-                  //   context,
-                  //   MaterialPageRoute(
-                  //     builder: (context) => MatchingScreen(),
-                  //   ),
-                  // );
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => MatchingScreen(item.topic),
+                    ),
+                  );
                 },
                 style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.all(
@@ -103,6 +102,13 @@ class TopicScreen extends StatelessWidget {
     );
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(
+            Icons.arrow_back,
+            color: Color.fromARGB(255, 5, 33, 71),
+          ),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
         backgroundColor: const Color.fromARGB(255, 237, 243, 255),
         elevation: 0,
         centerTitle: true,

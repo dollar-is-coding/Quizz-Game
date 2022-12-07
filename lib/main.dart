@@ -5,7 +5,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:quizz_game_is_that_you/begin_screens/sign_in.dart';
 import 'package:quizz_game_is_that_you/begin_screens/verify_email.dart';
 import 'package:quizz_game_is_that_you/menu_screens/rank.dart';
-import 'package:quizz_game_is_that_you/the_others/topic.dart';
 import 'package:quizz_game_is_that_you/utils.dart';
 
 Future main() async {
@@ -20,35 +19,34 @@ class QuizzGame extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        scaffoldMessengerKey: messengerKey,
-        navigatorKey: navigatorKey,
-        debugShowCheckedModeBanner: false,
-        title: 'Quizz Game',
-        theme: ThemeData(
-          scaffoldBackgroundColor: const Color.fromARGB(255, 237, 243, 255),
-          textTheme: GoogleFonts.poppinsTextTheme(
-            Theme.of(context).textTheme,
-          ),
+      scaffoldMessengerKey: messengerKey,
+      navigatorKey: navigatorKey,
+      debugShowCheckedModeBanner: false,
+      title: 'Quizz Game',
+      theme: ThemeData(
+        scaffoldBackgroundColor: const Color.fromARGB(255, 237, 243, 255),
+        textTheme: GoogleFonts.poppinsTextTheme(
+          Theme.of(context).textTheme,
         ),
-        home: RankScreen()
-        // home: StreamBuilder<User?>(
-        //   stream: FirebaseAuth.instance.authStateChanges(),
-        //   builder: (context, snapshot) {
-        //     if (snapshot.connectionState == ConnectionState.waiting) {
-        //       return const Center(
-        //         child: CircularProgressIndicator(),
-        //       );
-        //     } else if (snapshot.hasError) {
-        //       return const Center(
-        //         child: Text('Something went wrong!'),
-        //       );
-        //     } else if (snapshot.hasData) {
-        //       return VerifyEmailScreen();
-        //     } else {
-        //       return SignInScreen();
-        //     }
-        //   },
-        // ),
-        );
+      ),
+      home: StreamBuilder<User?>(
+        stream: FirebaseAuth.instance.authStateChanges(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          } else if (snapshot.hasError) {
+            return const Center(
+              child: Text('Something went wrong!'),
+            );
+          } else if (snapshot.hasData) {
+            return VerifyEmailScreen();
+          } else {
+            return SignInScreen();
+          }
+        },
+      ),
+    );
   }
 }

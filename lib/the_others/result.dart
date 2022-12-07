@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:quizz_game_is_that_you/main.dart';
 import 'package:quizz_game_is_that_you/menu.dart';
-import 'package:quizz_game_is_that_you/the_others/question.dart';
 
 class ResultScreen extends StatelessWidget {
   final String text;
