@@ -140,7 +140,7 @@ class _QuestionScreenState extends State<QuestionScreen> {
                                 color: Color.fromARGB(255, 215, 175, 30),
                               ),
                               Text(
-                                doubleScore == 2 ? '100' : '50',
+                                '30',
                                 style: GoogleFonts.poppins(
                                   color: Colors.white,
                                   fontWeight: FontWeight.w500,
@@ -258,12 +258,12 @@ class _QuestionScreenState extends State<QuestionScreen> {
                                                 : index >= 5
                                                     ? suns = 10
                                                     : suns = 5;
-                                todayLeaves += doubleScore == 2 ? 100 : 50;
+                                todayLeaves += 30;
                                 users.doc(_authMail).update(
                                   {
-                                    'leaves': onLeaves +=
-                                        doubleScore == 2 ? 100 : 50,
-                                    'suns': onSuns += suns
+                                    'leaves': onLeaves += 30,
+                                    'suns': onSuns +=
+                                        doubleScore == 2 ? suns * 2 : suns
                                   },
                                 );
                                 ranks
@@ -361,12 +361,12 @@ class _QuestionScreenState extends State<QuestionScreen> {
                                                 : index >= 5
                                                     ? suns = 10
                                                     : suns = 5;
-                                todayLeaves += doubleScore == 2 ? 100 : 50;
+                                todayLeaves += 30;
                                 users.doc(_authMail).update(
                                   {
-                                    'leaves': onLeaves +=
-                                        doubleScore == 2 ? 100 : 50,
-                                    'suns': onSuns += suns
+                                    'leaves': onLeaves += 30,
+                                    'suns': onSuns +=
+                                        doubleScore == 2 ? suns * 2 : suns
                                   },
                                 );
                                 ranks
@@ -464,12 +464,12 @@ class _QuestionScreenState extends State<QuestionScreen> {
                                                 : index >= 5
                                                     ? suns = 10
                                                     : suns = 5;
-                                todayLeaves += doubleScore == 2 ? 100 : 50;
+                                todayLeaves += 30;
                                 users.doc(_authMail).update(
                                   {
-                                    'leaves': onLeaves +=
-                                        doubleScore == 2 ? 100 : 50,
-                                    'suns': onSuns += suns
+                                    'leaves': onLeaves += 30,
+                                    'suns': onSuns +=
+                                        doubleScore == 2 ? suns * 2 : suns
                                   },
                                 );
                                 ranks
@@ -567,12 +567,12 @@ class _QuestionScreenState extends State<QuestionScreen> {
                                                 : index >= 5
                                                     ? suns = 10
                                                     : suns = 5;
-                                todayLeaves += doubleScore == 2 ? 100 : 50;
+                                todayLeaves += 30;
                                 users.doc(_authMail).update(
                                   {
-                                    'leaves': onLeaves +=
-                                        doubleScore == 2 ? 100 : 50,
-                                    'suns': onSuns += suns
+                                    'leaves': onLeaves += 30,
+                                    'suns': onSuns +=
+                                        doubleScore == 2 ? suns * 2 : suns
                                   },
                                 );
                                 ranks
@@ -673,8 +673,13 @@ class _QuestionScreenState extends State<QuestionScreen> {
                 height: MediaQuery.of(context).size.height * 0.09,
                 child: ElevatedButton(
                   onPressed: () {
-                    if (doubleScore == 1) {
+                    if (doubleScore == 1 && onLeaves >= 50) {
                       doubleScore++;
+                      users.doc(_authMail).update(
+                        {
+                          'leaves': onLeaves -= 50,
+                        },
+                      );
                     }
                   },
                   style: ElevatedButton.styleFrom(
@@ -707,7 +712,7 @@ class _QuestionScreenState extends State<QuestionScreen> {
                                 : Colors.greenAccent,
                           ),
                           Text(
-                            '30',
+                            '50',
                             style: GoogleFonts.poppins(
                               color: const Color.fromARGB(255, 5, 33, 71),
                             ),

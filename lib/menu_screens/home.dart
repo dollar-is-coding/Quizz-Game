@@ -49,12 +49,12 @@ class _HomeScreenState extends State<HomeScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Padding(
-              padding: const EdgeInsets.fromLTRB(0, 0, 20, 20),
+              padding: const EdgeInsets.fromLTRB(0, 0, 15, 20),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.22,
+                    width: MediaQuery.of(context).size.width * 0.26,
                     height: 40,
                     child: ElevatedButton(
                       onPressed: () => Navigator.pop(context),
@@ -76,12 +76,12 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.fromLTRB(20, 0, 0, 20),
+              padding: const EdgeInsets.fromLTRB(15, 0, 0, 20),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.22,
+                    width: MediaQuery.of(context).size.width * 0.26,
                     height: 40,
                     child: ElevatedButton(
                       onPressed: () {
