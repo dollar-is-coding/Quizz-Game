@@ -1,6 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:quizz_game_is_that_you/menu_screens/profile.dart';
 
 class EditProfileScreen extends StatefulWidget {
   @override
@@ -8,6 +11,10 @@ class EditProfileScreen extends StatefulWidget {
 }
 
 class _EditProfileScreenState extends State<EditProfileScreen> {
+  final _authMail = FirebaseAuth.instance.currentUser!.email;
+  final TextEditingController _name = TextEditingController();
+  var _users = FirebaseFirestore.instance.collection('Users');
+  var _ranks = FirebaseFirestore.instance.collection('Ranks');
   List<String> itemsGender = ['Male', 'Female'];
   String? selectGender = 'Male';
   List<String> itemsAge = ['18', '19', '20'];
@@ -74,33 +81,49 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               SizedBox(
                 width: MediaQuery.of(context).size.width,
                 height: MediaQuery.of(context).size.height * 0.07,
-                child: TextField(
-                  style: const TextStyle(
-                    fontSize: 15,
-                  ),
-                  decoration: InputDecoration(
-                    fillColor: const Color.fromARGB(255, 202, 221, 255),
-                    filled: true,
-                    contentPadding: const EdgeInsets.fromLTRB(15, 3, 0, 0),
-                    hintText: 'Fullname',
-                    hintStyle: GoogleFonts.poppins(
-                      color: const Color.fromARGB(255, 126, 148, 184),
-                      fontSize: 15,
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(20),
-                      borderSide: const BorderSide(
-                        color: Color.fromARGB(255, 196, 219, 237),
-                      ),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: const BorderSide(
-                        color: Color.fromARGB(255, 84, 121, 247),
-                      ),
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                  ),
-                ),
+                child: StreamBuilder(
+                    stream:
+                        _users.where('email', isEqualTo: _authMail).snapshots(),
+                    builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                      if (snapshot.hasData) {
+                        return Column(
+                          children: snapshot.data!.docs.map((_users) {
+                            return TextField(
+                              controller: _name,
+                              style: const TextStyle(
+                                fontSize: 15,
+                              ),
+                              decoration: InputDecoration(
+                                fillColor:
+                                    const Color.fromARGB(255, 202, 221, 255),
+                                filled: true,
+                                contentPadding:
+                                    const EdgeInsets.fromLTRB(15, 3, 0, 0),
+                                hintText: _name.text = _users['username'],
+                                hintStyle: GoogleFonts.poppins(
+                                  color:
+                                      const Color.fromARGB(255, 126, 148, 184),
+                                  fontSize: 15,
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                  borderSide: const BorderSide(
+                                    color: Color.fromARGB(255, 196, 219, 237),
+                                  ),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderSide: const BorderSide(
+                                    color: Color.fromARGB(255, 84, 121, 247),
+                                  ),
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                              ),
+                            );
+                          }).toList(),
+                        );
+                      }
+                      return Text('No data');
+                    }),
               ),
             ],
           ),
@@ -229,7 +252,48 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             width: MediaQuery.of(context).size.width * 0.4,
             height: 45,
             child: ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                if (_name.text.isNotEmpty) {
+                  final String name = _name.text;
+                  _users.doc(_authMail).update({"username": name});
+
+                  _ranks
+                      .where('email', isEqualTo: _authMail)
+                      .get()
+                      .then((value) {
+                    _ranks.doc('email').update({"user": name});
+                  });
+                  showDialog(
+                      context: context,
+                      builder: ((context) {
+                        return AlertDialog(
+                          title: Text('Thành công'),
+                          actions: [
+                            OutlinedButton(
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                                child: Text('OK'))
+                          ],
+                        );
+                      }));
+                } else {
+                  showDialog(
+                      context: context,
+                      builder: ((context) {
+                        return AlertDialog(
+                          title: Text('không Thành công'),
+                          actions: [
+                            OutlinedButton(
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                                child: Text('OK'))
+                          ],
+                        );
+                      }));
+                }
+              },
               style: ElevatedButton.styleFrom(
                   backgroundColor: const Color.fromARGB(255, 5, 33, 71),
                   shape: RoundedRectangleBorder(
