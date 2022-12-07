@@ -4,7 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:quizz_game_is_that_you/begin_screens/sign_in.dart';
 import 'package:quizz_game_is_that_you/begin_screens/verify_email.dart';
-import 'package:quizz_game_is_that_you/menu.dart';
+import 'package:quizz_game_is_that_you/menu_screens/rank.dart';
+import 'package:quizz_game_is_that_you/the_others/topic.dart';
 import 'package:quizz_game_is_that_you/utils.dart';
 
 Future main() async {

@@ -6,11 +6,16 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:quizz_game_is_that_you/the_others/result.dart';
 
 class QuestionScreen extends StatefulWidget {
+  final String username;
+
+  QuestionScreen(this.username);
   @override
-  State<QuestionScreen> createState() => _QuestionScreenState();
+  State<QuestionScreen> createState() => _QuestionScreenState(this.username);
 }
 
 class _QuestionScreenState extends State<QuestionScreen> {
+  String username;
+  _QuestionScreenState(this.username);
   int index = 30;
   int no = 1;
   int tap = 0;
@@ -27,6 +32,8 @@ class _QuestionScreenState extends State<QuestionScreen> {
   var ranks = FirebaseFirestore.instance.collection('Ranks');
   final questionHistories =
       FirebaseFirestore.instance.collection('Question History');
+  var playSingle = FirebaseFirestore.instance.collection('Single');
+  DateTime now = DateTime.now();
 
   CollectionReference sciences =
       FirebaseFirestore.instance.collection('Science');
@@ -77,10 +84,12 @@ class _QuestionScreenState extends State<QuestionScreen> {
     Timer(const Duration(seconds: 1), () {
       startCountDown();
     });
-    users
-        .doc(_authMail)
-        .update({'${today.day}-${today.month}-${today.year}': 1, 'suns': 0});
-    ranks.doc(_authMail).set({'${today.day}-${today.month}-${today.year}': 0});
+    users.doc(_authMail).update({'suns': 0});
+    ranks.doc('$_authMail${today.day}-${today.month}-${today.year} ').set({
+      'email': _authMail,
+      'date': '${today.day}-${today.month}-${today.year}',
+      'user': username,
+    });
   }
 
   @override
@@ -131,7 +140,7 @@ class _QuestionScreenState extends State<QuestionScreen> {
                                 color: Color.fromARGB(255, 215, 175, 30),
                               ),
                               Text(
-                                doubleScore == 2 ? '100' : '50',
+                                '30',
                                 style: GoogleFonts.poppins(
                                   color: Colors.white,
                                   fontWeight: FontWeight.w500,
@@ -249,18 +258,18 @@ class _QuestionScreenState extends State<QuestionScreen> {
                                                 : index >= 5
                                                     ? suns = 10
                                                     : suns = 5;
-                                todayLeaves += doubleScore == 2 ? 100 : 50;
+                                todayLeaves += 30;
                                 users.doc(_authMail).update(
                                   {
-                                    'leaves': onLeaves +=
-                                        doubleScore == 2 ? 100 : 50,
-                                    'suns': onSuns += suns
+                                    'leaves': onLeaves += 30,
+                                    'suns': onSuns +=
+                                        doubleScore == 2 ? suns * 2 : suns
                                   },
                                 );
-                                ranks.doc(_authMail).update({
-                                  '${today.day}-${today.month}-${today.year}':
-                                      onSuns
-                                });
+                                ranks
+                                    .doc(
+                                        '$_authMail${today.day}-${today.month}-${today.year} ')
+                                    .update({'suns': onSuns});
                               } else {
                                 setState(() => aColor = Colors.red);
                               }
@@ -352,18 +361,18 @@ class _QuestionScreenState extends State<QuestionScreen> {
                                                 : index >= 5
                                                     ? suns = 10
                                                     : suns = 5;
-                                todayLeaves += doubleScore == 2 ? 100 : 50;
+                                todayLeaves += 30;
                                 users.doc(_authMail).update(
                                   {
-                                    'leaves': onLeaves +=
-                                        doubleScore == 2 ? 100 : 50,
-                                    'suns': onSuns += suns
+                                    'leaves': onLeaves += 30,
+                                    'suns': onSuns +=
+                                        doubleScore == 2 ? suns * 2 : suns
                                   },
                                 );
-                                ranks.doc(_authMail).update({
-                                  '${today.day}-${today.month}-${today.year}':
-                                      onSuns
-                                });
+                                ranks
+                                    .doc(
+                                        '$_authMail${today.day}-${today.month}-${today.year} ')
+                                    .update({'suns': onSuns});
                               } else {
                                 setState(() => bColor = Colors.red);
                               }
@@ -455,18 +464,18 @@ class _QuestionScreenState extends State<QuestionScreen> {
                                                 : index >= 5
                                                     ? suns = 10
                                                     : suns = 5;
-                                todayLeaves += doubleScore == 2 ? 100 : 50;
+                                todayLeaves += 30;
                                 users.doc(_authMail).update(
                                   {
-                                    'leaves': onLeaves +=
-                                        doubleScore == 2 ? 100 : 50,
-                                    'suns': onSuns += suns
+                                    'leaves': onLeaves += 30,
+                                    'suns': onSuns +=
+                                        doubleScore == 2 ? suns * 2 : suns
                                   },
                                 );
-                                ranks.doc(_authMail).update({
-                                  '${today.day}-${today.month}-${today.year}':
-                                      onSuns
-                                });
+                                ranks
+                                    .doc(
+                                        '$_authMail${today.day}-${today.month}-${today.year} ')
+                                    .update({'suns': onSuns});
                               } else {
                                 setState(() => cColor = Colors.red);
                               }
@@ -558,18 +567,18 @@ class _QuestionScreenState extends State<QuestionScreen> {
                                                 : index >= 5
                                                     ? suns = 10
                                                     : suns = 5;
-                                todayLeaves += doubleScore == 2 ? 100 : 50;
+                                todayLeaves += 30;
                                 users.doc(_authMail).update(
                                   {
-                                    'leaves': onLeaves +=
-                                        doubleScore == 2 ? 100 : 50,
-                                    'suns': onSuns += suns
+                                    'leaves': onLeaves += 30,
+                                    'suns': onSuns +=
+                                        doubleScore == 2 ? suns * 2 : suns
                                   },
                                 );
-                                ranks.doc(_authMail).update({
-                                  '${today.day}-${today.month}-${today.year}':
-                                      onSuns
-                                });
+                                ranks
+                                    .doc(
+                                        '$_authMail${today.day}-${today.month}-${today.year} ')
+                                    .update({'suns': onSuns});
                               } else {
                                 setState(() => dColor = Colors.red);
                               }
@@ -664,8 +673,13 @@ class _QuestionScreenState extends State<QuestionScreen> {
                 height: MediaQuery.of(context).size.height * 0.09,
                 child: ElevatedButton(
                   onPressed: () {
-                    if (doubleScore == 1) {
+                    if (doubleScore == 1 && onLeaves >= 50) {
                       doubleScore++;
+                      users.doc(_authMail).update(
+                        {
+                          'leaves': onLeaves -= 50,
+                        },
+                      );
                     }
                   },
                   style: ElevatedButton.styleFrom(
@@ -698,7 +712,7 @@ class _QuestionScreenState extends State<QuestionScreen> {
                                 : Colors.greenAccent,
                           ),
                           Text(
-                            '30',
+                            '50',
                             style: GoogleFonts.poppins(
                               color: const Color.fromARGB(255, 5, 33, 71),
                             ),
