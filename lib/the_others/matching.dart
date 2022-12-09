@@ -42,15 +42,17 @@ class _MatchingScreenState extends State<MatchingScreen> {
                           flex: 1,
                           child: Column(
                             children: [
-                              const CircleAvatar(
-                                backgroundImage:
-                                    AssetImage('images/avatar.png'),
+                              CircleAvatar(
+                                backgroundImage: AssetImage(
+                                    room['email1'] == _authMail
+                                        ? 'images/avatar_01.png'
+                                        : 'images/avatar_02.png'),
                                 minRadius: 60,
                               ),
                               Padding(
                                 padding: const EdgeInsets.only(top: 5),
                                 child: Text(
-                                  room['user1'],
+                                  'You',
                                   style: GoogleFonts.poppins(
                                     fontSize: 20,
                                     fontWeight: FontWeight.w500,
@@ -74,9 +76,11 @@ class _MatchingScreenState extends State<MatchingScreen> {
                           child: Column(
                             children: [
                               CircleAvatar(
-                                backgroundImage: AssetImage(room['user2'] != ''
-                                    ? 'images/avatar_01.png'
-                                    : 'images/no_avatar.png'),
+                                backgroundImage: AssetImage(room['user2'] == ''
+                                    ? 'images/no_avatar.png'
+                                    : room['email1'] == _authMail
+                                        ? 'images/avatar_02.png'
+                                        : 'images/avatar_01.png'),
                                 minRadius: 60,
                               ),
                               Padding(
@@ -84,7 +88,9 @@ class _MatchingScreenState extends State<MatchingScreen> {
                                 child: Text(
                                   room['user2'] == ''
                                       ? 'User 2'
-                                      : room['user2'],
+                                      : room['email2'] == _authMail
+                                          ? room['user1']
+                                          : room['user2'],
                                   style: GoogleFonts.poppins(
                                     fontSize: 20,
                                     fontWeight: FontWeight.w500,
@@ -167,23 +173,28 @@ class _MatchingScreenState extends State<MatchingScreen> {
                                 child: ElevatedButton(
                                   onPressed: () {
                                     if (room['user2'] != '') {
-                                      room.reference.update({
-                                        'state': 1,
-                                        'suns1': 0,
-                                        'suns2': 0,
-                                        'no1': 0,
-                                      });
+                                      room.reference.update(
+                                        {
+                                          'state': 1,
+                                          'suns1': 0,
+                                          'suns2': 0,
+                                          'no1': 0,
+                                        },
+                                      );
                                       categoryUser = 'user1';
-                                      Timer(const Duration(seconds: 2), () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) =>
-                                                BattleQuestionScreen(roomID,
-                                                    topic, categoryUser),
-                                          ),
-                                        );
-                                      });
+                                      Timer(
+                                        const Duration(seconds: 2),
+                                        () {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  BattleQuestionScreen(roomID,
+                                                      topic, categoryUser),
+                                            ),
+                                          );
+                                        },
+                                      );
                                     }
                                   },
                                   style: ElevatedButton.styleFrom(
@@ -298,10 +309,12 @@ class _MatchingScreenState extends State<MatchingScreen> {
                                               MainMenuScreen(),
                                         ),
                                       );
-                                      rooms.doc(roomID).update({
-                                        'email2': '',
-                                        'user2': '',
-                                      });
+                                      rooms.doc(roomID).update(
+                                        {
+                                          'email2': '',
+                                          'user2': '',
+                                        },
+                                      );
                                     }
                                   },
                                   style: ElevatedButton.styleFrom(

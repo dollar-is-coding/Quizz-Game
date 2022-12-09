@@ -140,7 +140,7 @@ class _WinOrLoseScreenState extends State<WinOrLoseScreen> {
                               ),
                             ),
                             const Icon(
-                              Icons.brightness_low_rounded,
+                              Icons.eco_rounded,
                               color: Color.fromARGB(255, 204, 193, 79),
                             ),
                             Text(
@@ -151,11 +151,14 @@ class _WinOrLoseScreenState extends State<WinOrLoseScreen> {
                             ),
                           ],
                         ),
-                        Lottie.network(result == 1
-                            ? 'https://assets1.lottiefiles.com/private_files/lf30_hxmzmij0.json'
-                            : result == -1
-                                ? 'https://assets2.lottiefiles.com/private_files/lf30_aprp5fnm.json'
-                                : 'https://assets4.lottiefiles.com/packages/lf20_pvlqvtxk.json'),
+                        SizedBox(
+                          height: MediaQuery.of(context).size.height * 0.4,
+                          child: Lottie.network(result == 1
+                              ? 'https://assets1.lottiefiles.com/private_files/lf30_hxmzmij0.json'
+                              : result == -1
+                                  ? 'https://assets2.lottiefiles.com/private_files/lf30_aprp5fnm.json'
+                                  : 'https://assets4.lottiefiles.com/packages/lf20_pvlqvtxk.json'),
+                        ),
                         Padding(
                           padding: const EdgeInsets.only(top: 30),
                           child: SizedBox(

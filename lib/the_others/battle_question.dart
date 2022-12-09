@@ -99,10 +99,13 @@ class _BattleQuestionScreenState extends State<BattleQuestionScreen> {
                     children: [
                       Row(
                         children: [
-                          const Padding(
-                            padding: EdgeInsets.only(right: 10),
+                          Padding(
+                            padding: const EdgeInsets.only(right: 10),
                             child: CircleAvatar(
-                              backgroundImage: AssetImage('images/avatar.png'),
+                              backgroundImage: AssetImage(
+                                  room['email1'] == _authMail
+                                      ? 'images/avatar_01.png'
+                                      : 'images/avatar_02.png'),
                               radius: 25,
                             ),
                           ),
@@ -112,7 +115,9 @@ class _BattleQuestionScreenState extends State<BattleQuestionScreen> {
                             size: 25,
                           ),
                           Text(
-                            room['suns1'].toString(),
+                            room['email1'] == _authMail
+                                ? room['suns1'].toString()
+                                : room['suns2'].toString(),
                             style: GoogleFonts.poppins(
                               color: const Color.fromARGB(255, 5, 33, 71),
                               fontWeight: FontWeight.w500,
@@ -129,18 +134,22 @@ class _BattleQuestionScreenState extends State<BattleQuestionScreen> {
                             size: 25,
                           ),
                           Text(
-                            room['suns2'].toString(),
+                            room['email1'] == _authMail
+                                ? room['suns2'].toString()
+                                : room['suns1'].toString(),
                             style: GoogleFonts.poppins(
                               color: const Color.fromARGB(255, 5, 33, 71),
                               fontWeight: FontWeight.w500,
                               fontSize: 15,
                             ),
                           ),
-                          const Padding(
-                            padding: EdgeInsets.only(left: 10),
+                          Padding(
+                            padding: const EdgeInsets.only(left: 10),
                             child: CircleAvatar(
-                              backgroundImage:
-                                  AssetImage('images/avatar_01.png'),
+                              backgroundImage: AssetImage(
+                                  room['email1'] == _authMail
+                                      ? 'images/avatar_02.png'
+                                      : 'images/avatar_01.png'),
                               radius: 25,
                             ),
                           ),
@@ -284,7 +293,7 @@ class _BattleQuestionScreenState extends State<BattleQuestionScreen> {
                                       context,
                                       MaterialPageRoute(
                                         builder: (context) => WinOrLoseScreen(
-                                            roomID, categoryUser,onLeaves),
+                                            roomID, categoryUser, onLeaves),
                                       ),
                                     );
                                   }
@@ -376,7 +385,7 @@ class _BattleQuestionScreenState extends State<BattleQuestionScreen> {
                                       context,
                                       MaterialPageRoute(
                                         builder: (context) => WinOrLoseScreen(
-                                            roomID, categoryUser,onLeaves),
+                                            roomID, categoryUser, onLeaves),
                                       ),
                                     );
                                   }
@@ -468,7 +477,7 @@ class _BattleQuestionScreenState extends State<BattleQuestionScreen> {
                                       context,
                                       MaterialPageRoute(
                                         builder: (context) => WinOrLoseScreen(
-                                            roomID, categoryUser,onLeaves),
+                                            roomID, categoryUser, onLeaves),
                                       ),
                                     );
                                   }
@@ -560,7 +569,7 @@ class _BattleQuestionScreenState extends State<BattleQuestionScreen> {
                                       context,
                                       MaterialPageRoute(
                                         builder: (context) => WinOrLoseScreen(
-                                            roomID, categoryUser,onLeaves),
+                                            roomID, categoryUser, onLeaves),
                                       ),
                                     );
                                   }

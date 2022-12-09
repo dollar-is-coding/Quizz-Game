@@ -261,36 +261,46 @@ class _HomeScreenState extends State<HomeScreen> {
                                                 softWrap: true,
                                               ),
                                             ),
-                                            ElevatedButton(
-                                              onPressed: () {
-                                                Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        MatchingScreen(
-                                                            room['room']),
+                                            SizedBox(
+                                              height: 40,
+                                              width: MediaQuery.of(context)
+                                                      .size
+                                                      .width *
+                                                  0.4,
+                                              child: ElevatedButton(
+                                                onPressed: () {
+                                                  Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          MatchingScreen(
+                                                              room['room']),
+                                                    ),
+                                                  );
+                                                  rooms
+                                                      .doc(room['room'])
+                                                      .update(
+                                                    {
+                                                      'email2': _authMail,
+                                                      'user2': username,
+                                                    },
+                                                  );
+                                                },
+                                                style: ElevatedButton.styleFrom(
+                                                  backgroundColor:
+                                                      const Color.fromARGB(
+                                                          255, 5, 33, 71),
+                                                  shape: RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            15),
                                                   ),
-                                                );
-                                                rooms.doc(room['room']).update(
-                                                  {
-                                                    'email2': _authMail,
-                                                    'user2': username,
-                                                  },
-                                                );
-                                              },
-                                              style: ElevatedButton.styleFrom(
-                                                backgroundColor:
-                                                    const Color.fromARGB(
-                                                        255, 5, 33, 71),
-                                                shape: RoundedRectangleBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(15),
                                                 ),
-                                              ),
-                                              child: Text(
-                                                'Join now',
-                                                style: GoogleFonts.poppins(
-                                                  fontSize: 17,
+                                                child: Text(
+                                                  'Join now',
+                                                  style: GoogleFonts.poppins(
+                                                    fontSize: 17,
+                                                  ),
                                                 ),
                                               ),
                                             ),
