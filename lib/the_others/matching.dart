@@ -290,20 +290,25 @@ class _MatchingScreenState extends State<MatchingScreen> {
                                 height: 45,
                                 child: ElevatedButton(
                                   onPressed: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => MainMenuScreen(),
-                                      ),
-                                    );
-                                    rooms.doc(roomID).update({
-                                      'email2': '',
-                                      'user2': '',
-                                    });
+                                    if (room['state'] != 1) {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              MainMenuScreen(),
+                                        ),
+                                      );
+                                      rooms.doc(roomID).update({
+                                        'email2': '',
+                                        'user2': '',
+                                      });
+                                    }
                                   },
                                   style: ElevatedButton.styleFrom(
-                                    backgroundColor:
-                                        const Color.fromARGB(255, 255, 0, 0),
+                                    backgroundColor: room['state'] != 1
+                                        ? const Color.fromARGB(255, 255, 0, 0)
+                                        : const Color.fromARGB(
+                                            255, 153, 185, 255),
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(15),
                                     ),
