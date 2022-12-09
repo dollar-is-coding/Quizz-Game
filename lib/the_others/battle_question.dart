@@ -1,45 +1,41 @@
 import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:quizz_game_is_that_you/the_others/result.dart';
+import 'package:quizz_game_is_that_you/the_others/win_lose.dart';
 
-class QuestionScreen extends StatefulWidget {
-  final String username;
-
-  QuestionScreen(this.username);
+class BattleQuestionScreen extends StatefulWidget {
+  final String roomID;
+  final String topic;
+  final String categoryUser;
+  BattleQuestionScreen(this.roomID, this.topic, this.categoryUser);
   @override
-  State<QuestionScreen> createState() => _QuestionScreenState(this.username);
+  State<BattleQuestionScreen> createState() =>
+      _BattleQuestionScreenState(this.roomID, this.topic, this.categoryUser);
 }
 
-class _QuestionScreenState extends State<QuestionScreen> {
-  String username;
-  _QuestionScreenState(this.username);
-  int index = 30;
-  int no = 1;
-  int tap = 0;
-  int onLeaves = 0;
-  int todayLeaves = 0;
-  late int suns;
-  int onSuns = 0;
-  int doubleScore = 1;
-  Color doubleScoreColor = const Color.fromARGB(255, 202, 221, 255);
-  Timer? timer;
-  DateTime today = DateTime.now();
+class _BattleQuestionScreenState extends State<BattleQuestionScreen> {
+  String roomID;
+  String topic;
+  String categoryUser;
+  _BattleQuestionScreenState(this.roomID, this.topic, this.categoryUser);
+  var rooms = FirebaseFirestore.instance.collection('Rooms');
   final _authMail = FirebaseAuth.instance.currentUser!.email;
   var users = FirebaseFirestore.instance.collection('Users');
-  var ranks = FirebaseFirestore.instance.collection('Ranks');
-  final questionHistories =
-      FirebaseFirestore.instance.collection('Question History');
-
-  CollectionReference sciences =
-      FirebaseFirestore.instance.collection('Science');
+  Timer? timer;
+  int index = 30;
+  int no = 1;
+  int doubleScore = 1;
+  int onLeaves = 0;
+  late int suns;
+  int sumSuns = 0;
   Color aColor = const Color.fromARGB(255, 202, 221, 255);
   Color bColor = const Color.fromARGB(255, 202, 221, 255);
   Color cColor = const Color.fromARGB(255, 202, 221, 255);
   Color dColor = const Color.fromARGB(255, 202, 221, 255);
-
+  Color doubleScoreColor = const Color.fromARGB(255, 202, 221, 255);
   void startCountDown() {
     timer = Timer.periodic(
       const Duration(
@@ -62,12 +58,15 @@ class _QuestionScreenState extends State<QuestionScreen> {
           );
           index = 30;
           no++;
+          categoryUser == 'user1'
+              ? rooms.doc(roomID).update({'no1': no})
+              : rooms.doc(roomID).update({'no2': no});
           if (no == 11) {
             Navigator.push(
               context,
               MaterialPageRoute(
                 builder: (context) =>
-                    ResultScreen(text: todayLeaves.toString()),
+                    WinOrLoseScreen(roomID, categoryUser, onLeaves),
               ),
             );
           }
@@ -78,34 +77,111 @@ class _QuestionScreenState extends State<QuestionScreen> {
 
   @override
   void initState() {
-    super.initState();
     Timer(const Duration(seconds: 1), () {
       startCountDown();
     });
-    users.doc(_authMail).update({'suns': 0});
-    ranks.doc('$_authMail${today.day}-${today.month}-${today.year} ').set({
-      'email': _authMail,
-      'date': '${today.day}-${today.month}-${today.year}',
-      'user': username,
-    });
+    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    Widget solo = Padding(
+      padding: const EdgeInsets.fromLTRB(15, 10, 15, 0),
+      child: StreamBuilder(
+        stream: rooms.where('room', isEqualTo: roomID).snapshots(),
+        builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+          if (snapshot.hasData) {
+            return Column(
+              children: snapshot.data!.docs.map(
+                (room) {
+                  return Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(right: 10),
+                            child: CircleAvatar(
+                              backgroundImage: AssetImage(
+                                  room['email1'] == _authMail
+                                      ? 'images/avatar_01.png'
+                                      : 'images/avatar_02.png'),
+                              radius: 25,
+                            ),
+                          ),
+                          const Icon(
+                            Icons.brightness_low_rounded,
+                            color: Color.fromARGB(255, 204, 193, 79),
+                            size: 25,
+                          ),
+                          Text(
+                            room['email1'] == _authMail
+                                ? room['suns1'].toString()
+                                : room['suns2'].toString(),
+                            style: GoogleFonts.poppins(
+                              color: const Color.fromARGB(255, 5, 33, 71),
+                              fontWeight: FontWeight.w500,
+                              fontSize: 15,
+                            ),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          const Icon(
+                            Icons.brightness_low_rounded,
+                            color: Color.fromARGB(255, 204, 193, 79),
+                            size: 25,
+                          ),
+                          Text(
+                            room['email1'] == _authMail
+                                ? room['suns2'].toString()
+                                : room['suns1'].toString(),
+                            style: GoogleFonts.poppins(
+                              color: const Color.fromARGB(255, 5, 33, 71),
+                              fontWeight: FontWeight.w500,
+                              fontSize: 15,
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(left: 10),
+                            child: CircleAvatar(
+                              backgroundImage: AssetImage(
+                                  room['email1'] == _authMail
+                                      ? 'images/avatar_02.png'
+                                      : 'images/avatar_01.png'),
+                              radius: 25,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  );
+                },
+              ).toList(),
+            );
+          }
+          return const Text('No user');
+        },
+      ),
+    );
     Widget question = Container(
       margin: const EdgeInsets.fromLTRB(15, 10, 15, 0),
-      width: MediaQuery.of(context).size.width * 1,
+      width: MediaQuery.of(context).size.width,
       height: MediaQuery.of(context).size.height * 0.34,
       decoration: BoxDecoration(
         color: const Color.fromARGB(255, 18, 50, 77),
         borderRadius: BorderRadius.circular(10),
       ),
       child: StreamBuilder(
-        stream: sciences.where('no', isEqualTo: no).snapshots(),
+        stream: FirebaseFirestore.instance
+            .collection(topic)
+            .where('no', isEqualTo: no)
+            .snapshots(),
         builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (snapshot.hasData) {
             return ListView(
-              children: snapshot.data!.docs.map((science) {
+              children: snapshot.data!.docs.map((topic) {
                 return Column(
                   children: [
                     Padding(
@@ -114,7 +190,7 @@ class _QuestionScreenState extends State<QuestionScreen> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            'Question ${science['no'].toString()}',
+                            'Question ${topic['no'].toString()}',
                             style: GoogleFonts.poppins(
                               color: Colors.white,
                             ),
@@ -134,8 +210,8 @@ class _QuestionScreenState extends State<QuestionScreen> {
                           Row(
                             children: [
                               const Icon(
-                                Icons.eco_rounded,
-                                color: Color.fromARGB(255, 215, 175, 30),
+                                Icons.brightness_low_rounded,
+                                color: Color.fromARGB(255, 204, 193, 79),
                               ),
                               Text(
                                 '30',
@@ -160,7 +236,7 @@ class _QuestionScreenState extends State<QuestionScreen> {
                       child: Padding(
                         padding: const EdgeInsets.fromLTRB(15, 10, 15, 10),
                         child: Text(
-                          science['question'],
+                          topic['question'],
                           style: GoogleFonts.poppins(
                             color: const Color.fromARGB(255, 5, 33, 71),
                             fontWeight: FontWeight.w500,
@@ -180,12 +256,15 @@ class _QuestionScreenState extends State<QuestionScreen> {
     );
 
     Widget fourAnswer = StreamBuilder(
-      stream: sciences.where('no', isEqualTo: no).snapshots(),
+      stream: FirebaseFirestore.instance
+          .collection(topic)
+          .where('no', isEqualTo: no)
+          .snapshots(),
       builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
         if (snapshot.hasData) {
           return ListView(
             shrinkWrap: true,
-            children: snapshot.data!.docs.map((science) {
+            children: snapshot.data!.docs.map((topic) {
               return SizedBox(
                 height: MediaQuery.of(context).size.height * 0.32,
                 child: Column(
@@ -200,28 +279,21 @@ class _QuestionScreenState extends State<QuestionScreen> {
                           onPressed: () {
                             if (timer!.isActive) {
                               timer?.cancel();
-                              questionHistories.add(
-                                {
-                                  'true': science['true'],
-                                  'choose': 'a',
-                                  'question': science['question'],
-                                  'no': science['no'],
-                                  'date': DateTime.now(),
-                                  'user': _authMail,
-                                },
-                              );
                               Timer(
-                                const Duration(seconds: 3),
+                                const Duration(seconds: 2),
                                 () {
                                   index = 30;
                                   no++;
+                                  categoryUser == 'user1'
+                                      ? rooms.doc(roomID).update({'no1': no})
+                                      : rooms.doc(roomID).update({'no2': no});
+
                                   if (no == 11) {
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                        builder: (context) => ResultScreen(
-                                          text: todayLeaves.toString(),
-                                        ),
+                                        builder: (context) => WinOrLoseScreen(
+                                            roomID, categoryUser, onLeaves),
                                       ),
                                     );
                                   }
@@ -243,12 +315,12 @@ class _QuestionScreenState extends State<QuestionScreen> {
                                   );
                                 },
                               );
-                              if (science['true'] == 'a') {
+                              if (topic['true'] == 'a') {
                                 setState(() => aColor = Colors.green);
                                 index >= 25
-                                    ? suns = 40
+                                    ? suns = 30
                                     : index >= 20
-                                        ? suns = 30
+                                        ? suns = 25
                                         : index >= 15
                                             ? suns = 20
                                             : index >= 10
@@ -256,18 +328,14 @@ class _QuestionScreenState extends State<QuestionScreen> {
                                                 : index >= 5
                                                     ? suns = 10
                                                     : suns = 5;
-                                todayLeaves += 30;
-                                users.doc(_authMail).update(
-                                  {
-                                    'leaves': onLeaves += 30,
-                                    'suns': onSuns +=
-                                        doubleScore == 2 ? suns * 2 : suns
-                                  },
-                                );
-                                ranks
-                                    .doc(
-                                        '$_authMail${today.day}-${today.month}-${today.year} ')
-                                    .update({'suns': onSuns});
+                                sumSuns += doubleScore == 2 ? suns * 2 : suns;
+                                categoryUser == 'user1'
+                                    ? rooms
+                                        .doc(roomID)
+                                        .update({'suns1': sumSuns})
+                                    : rooms
+                                        .doc(roomID)
+                                        .update({'suns2': sumSuns});
                               } else {
                                 setState(() => aColor = Colors.red);
                               }
@@ -283,7 +351,7 @@ class _QuestionScreenState extends State<QuestionScreen> {
                           child: FittedBox(
                             fit: BoxFit.contain,
                             child: Text(
-                              science['a'],
+                              topic['a'],
                               style: GoogleFonts.poppins(
                                 color: const Color.fromARGB(255, 5, 33, 71),
                                 fontWeight: FontWeight.w500,
@@ -303,28 +371,21 @@ class _QuestionScreenState extends State<QuestionScreen> {
                           onPressed: () {
                             if (timer!.isActive) {
                               timer?.cancel();
-                              questionHistories.add(
-                                {
-                                  'true': science['true'],
-                                  'choose': 'b',
-                                  'question': science['question'],
-                                  'no': science['no'],
-                                  'date': DateTime.now(),
-                                  'user': _authMail,
-                                },
-                              );
                               Timer(
-                                const Duration(seconds: 3),
+                                const Duration(seconds: 2),
                                 () {
                                   index = 30;
                                   no++;
+                                  categoryUser == 'user1'
+                                      ? rooms.doc(roomID).update({'no1': no})
+                                      : rooms.doc(roomID).update({'no2': no});
+
                                   if (no == 11) {
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                        builder: (context) => ResultScreen(
-                                          text: todayLeaves.toString(),
-                                        ),
+                                        builder: (context) => WinOrLoseScreen(
+                                            roomID, categoryUser, onLeaves),
                                       ),
                                     );
                                   }
@@ -346,7 +407,7 @@ class _QuestionScreenState extends State<QuestionScreen> {
                                   );
                                 },
                               );
-                              if (science['true'] == 'b') {
+                              if (topic['true'] == 'b') {
                                 setState(() => bColor = Colors.green);
                                 index >= 25
                                     ? suns = 40
@@ -359,18 +420,14 @@ class _QuestionScreenState extends State<QuestionScreen> {
                                                 : index >= 5
                                                     ? suns = 10
                                                     : suns = 5;
-                                todayLeaves += 30;
-                                users.doc(_authMail).update(
-                                  {
-                                    'leaves': onLeaves += 30,
-                                    'suns': onSuns +=
-                                        doubleScore == 2 ? suns * 2 : suns
-                                  },
-                                );
-                                ranks
-                                    .doc(
-                                        '$_authMail${today.day}-${today.month}-${today.year} ')
-                                    .update({'suns': onSuns});
+                                sumSuns += doubleScore == 2 ? suns * 2 : suns;
+                                categoryUser == 'user1'
+                                    ? rooms
+                                        .doc(roomID)
+                                        .update({'suns1': sumSuns})
+                                    : rooms
+                                        .doc(roomID)
+                                        .update({'suns2': sumSuns});
                               } else {
                                 setState(() => bColor = Colors.red);
                               }
@@ -386,7 +443,7 @@ class _QuestionScreenState extends State<QuestionScreen> {
                           child: FittedBox(
                             fit: BoxFit.contain,
                             child: Text(
-                              science['b'],
+                              topic['b'],
                               style: GoogleFonts.poppins(
                                 color: const Color.fromARGB(255, 5, 33, 71),
                                 fontWeight: FontWeight.w500,
@@ -406,31 +463,24 @@ class _QuestionScreenState extends State<QuestionScreen> {
                           onPressed: () {
                             if (timer!.isActive) {
                               timer?.cancel();
-                              questionHistories.add(
-                                {
-                                  'true': science['true'],
-                                  'choose': 'c',
-                                  'question': science['question'],
-                                  'no': science['no'],
-                                  'date': DateTime.now(),
-                                  'user': _authMail,
-                                },
-                              );
                               Timer(
-                                const Duration(seconds: 3),
+                                const Duration(seconds: 2),
                                 () {
+                                  index = 30;
                                   no++;
+                                  categoryUser == 'user1'
+                                      ? rooms.doc(roomID).update({'no1': no})
+                                      : rooms.doc(roomID).update({'no2': no});
+
                                   if (no == 11) {
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                        builder: (context) => ResultScreen(
-                                          text: todayLeaves.toString(),
-                                        ),
+                                        builder: (context) => WinOrLoseScreen(
+                                            roomID, categoryUser, onLeaves),
                                       ),
                                     );
                                   }
-                                  index = 30;
                                   startCountDown();
                                   setState(
                                     () {
@@ -449,7 +499,7 @@ class _QuestionScreenState extends State<QuestionScreen> {
                                   );
                                 },
                               );
-                              if (science['true'] == 'c') {
+                              if (topic['true'] == 'c') {
                                 setState(() => cColor = Colors.green);
                                 index >= 25
                                     ? suns = 40
@@ -462,18 +512,14 @@ class _QuestionScreenState extends State<QuestionScreen> {
                                                 : index >= 5
                                                     ? suns = 10
                                                     : suns = 5;
-                                todayLeaves += 30;
-                                users.doc(_authMail).update(
-                                  {
-                                    'leaves': onLeaves += 30,
-                                    'suns': onSuns +=
-                                        doubleScore == 2 ? suns * 2 : suns
-                                  },
-                                );
-                                ranks
-                                    .doc(
-                                        '$_authMail${today.day}-${today.month}-${today.year} ')
-                                    .update({'suns': onSuns});
+                                sumSuns += doubleScore == 2 ? suns * 2 : suns;
+                                categoryUser == 'user1'
+                                    ? rooms
+                                        .doc(roomID)
+                                        .update({'suns1': sumSuns})
+                                    : rooms
+                                        .doc(roomID)
+                                        .update({'suns2': sumSuns});
                               } else {
                                 setState(() => cColor = Colors.red);
                               }
@@ -489,7 +535,7 @@ class _QuestionScreenState extends State<QuestionScreen> {
                           child: FittedBox(
                             fit: BoxFit.contain,
                             child: Text(
-                              science['c'],
+                              topic['c'],
                               style: GoogleFonts.poppins(
                                 color: const Color.fromARGB(255, 5, 33, 71),
                                 fontWeight: FontWeight.w500,
@@ -509,32 +555,24 @@ class _QuestionScreenState extends State<QuestionScreen> {
                           onPressed: () {
                             if (timer!.isActive) {
                               timer?.cancel();
-                              questionHistories.add(
-                                {
-                                  'true': science['true'],
-                                  'choose': 'd',
-                                  'question': science['question'],
-                                  'no': science['no'],
-                                  'date': DateTime.now(),
-                                  'user': _authMail,
-                                },
-                              );
                               Timer(
-                                const Duration(seconds: 3),
+                                const Duration(seconds: 2),
                                 () {
                                   index = 30;
                                   no++;
+                                  categoryUser == 'user1'
+                                      ? rooms.doc(roomID).update({'no1': no})
+                                      : rooms.doc(roomID).update({'no2': no});
+                                  startCountDown();
                                   if (no == 11) {
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                        builder: (context) => ResultScreen(
-                                          text: todayLeaves.toString(),
-                                        ),
+                                        builder: (context) => WinOrLoseScreen(
+                                            roomID, categoryUser, onLeaves),
                                       ),
                                     );
                                   }
-                                  startCountDown();
                                   setState(
                                     () {
                                       aColor = const Color.fromARGB(
@@ -552,7 +590,7 @@ class _QuestionScreenState extends State<QuestionScreen> {
                                   );
                                 },
                               );
-                              if (science['true'] == 'd') {
+                              if (topic['true'] == 'd') {
                                 setState(() => dColor = Colors.green);
                                 index >= 25
                                     ? suns = 40
@@ -565,18 +603,14 @@ class _QuestionScreenState extends State<QuestionScreen> {
                                                 : index >= 5
                                                     ? suns = 10
                                                     : suns = 5;
-                                todayLeaves += 30;
-                                users.doc(_authMail).update(
-                                  {
-                                    'leaves': onLeaves += 30,
-                                    'suns': onSuns +=
-                                        doubleScore == 2 ? suns * 2 : suns
-                                  },
-                                );
-                                ranks
-                                    .doc(
-                                        '$_authMail${today.day}-${today.month}-${today.year} ')
-                                    .update({'suns': onSuns});
+                                sumSuns += doubleScore == 2 ? suns * 2 : suns;
+                                categoryUser == 'user1'
+                                    ? rooms
+                                        .doc(roomID)
+                                        .update({'suns1': sumSuns})
+                                    : rooms
+                                        .doc(roomID)
+                                        .update({'suns2': sumSuns});
                               } else {
                                 setState(() => dColor = Colors.red);
                               }
@@ -592,7 +626,7 @@ class _QuestionScreenState extends State<QuestionScreen> {
                           child: FittedBox(
                             fit: BoxFit.contain,
                             child: Text(
-                              science['d'],
+                              topic['d'],
                               style: GoogleFonts.poppins(
                                 color: const Color.fromARGB(255, 5, 33, 71),
                                 fontWeight: FontWeight.w500,
@@ -612,9 +646,8 @@ class _QuestionScreenState extends State<QuestionScreen> {
         return const Text('No data');
       },
     );
-
     Widget helpButton = Padding(
-      padding: const EdgeInsets.all(15),
+      padding: const EdgeInsets.fromLTRB(15, 0, 15, 10),
       child: Column(
         children: [
           Padding(
@@ -627,7 +660,6 @@ class _QuestionScreenState extends State<QuestionScreen> {
                     children: snapshot.data!.docs.map(
                       (user) {
                         onLeaves = user['leaves'];
-                        onSuns = user['suns'];
                         return Row(
                           children: [
                             const Icon(
@@ -636,19 +668,6 @@ class _QuestionScreenState extends State<QuestionScreen> {
                             ),
                             Text(
                               user['leaves'].toString(),
-                              style: GoogleFonts.poppins(
-                                color: const Color.fromARGB(255, 5, 33, 71),
-                              ),
-                            ),
-                            const Padding(
-                              padding: EdgeInsets.only(left: 20),
-                              child: Icon(
-                                Icons.brightness_low_rounded,
-                                color: Color.fromARGB(255, 215, 175, 30),
-                              ),
-                            ),
-                            Text(
-                              user['suns'].toString(),
                               style: GoogleFonts.poppins(
                                 color: const Color.fromARGB(255, 5, 33, 71),
                               ),
@@ -703,11 +722,9 @@ class _QuestionScreenState extends State<QuestionScreen> {
                       ),
                       Row(
                         children: [
-                          Icon(
+                          const Icon(
                             Icons.eco_rounded,
-                            color: doubleScore == 1
-                                ? const Color.fromARGB(255, 215, 175, 30)
-                                : Colors.greenAccent,
+                            color: Color.fromARGB(255, 215, 175, 30),
                           ),
                           Text(
                             '50',
@@ -740,7 +757,9 @@ class _QuestionScreenState extends State<QuestionScreen> {
                         children: [
                           Text(
                             'Fifty fifty',
-                            style: GoogleFonts.poppins(color: Colors.black),
+                            style: GoogleFonts.poppins(
+                              color: const Color.fromARGB(255, 5, 33, 71),
+                            ),
                           )
                         ],
                       ),
@@ -751,8 +770,10 @@ class _QuestionScreenState extends State<QuestionScreen> {
                             color: Color.fromARGB(255, 215, 175, 30),
                           ),
                           Text(
-                            '35',
-                            style: GoogleFonts.poppins(color: Colors.black),
+                            '40',
+                            style: GoogleFonts.poppins(
+                              color: const Color.fromARGB(255, 5, 33, 71),
+                            ),
                           )
                         ],
                       )
@@ -771,8 +792,13 @@ class _QuestionScreenState extends State<QuestionScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              question,
-              Text(doubleScore.toString()),
+              Column(
+                children: [
+                  Text(doubleScore.toString()),
+                  solo,
+                  question,
+                ],
+              ),
               fourAnswer,
               helpButton,
             ],

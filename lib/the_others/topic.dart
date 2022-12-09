@@ -1,6 +1,9 @@
-import 'package:flutter/cupertino.dart';
+import 'dart:math';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:quizz_game_is_that_you/the_others/matching.dart';
 
 class Topic {
   String topic;
@@ -8,16 +11,28 @@ class Topic {
 }
 
 class TopicScreen extends StatelessWidget {
-  TopicScreen([Key? key]) : super(key: key);
+  final String name;
+
+  TopicScreen({Key? key, required this.name}) : super(key: key);
   List<Topic> topics = [
     Topic('History'),
     Topic('Art'),
     Topic('Geography'),
-    Topic('History'),
     Topic('Literality'),
     Topic('Science'),
-    Topic('Funny'),
+    Topic('funny question'),
   ];
+  var rooms = FirebaseFirestore.instance.collection('Rooms');
+  final _authMail = FirebaseAuth.instance.currentUser!.email;
+
+  final _chars = 'abcdefghijklmnopqrstuvwxyz1234567890';
+  final Random _rnd = Random();
+  String getRandomString(int length) => String.fromCharCodes(Iterable.generate(
+      length, (_) => _chars.codeUnitAt(_rnd.nextInt(_chars.length))));
+
+  late String roomID;
+
+  var today = DateTime.now();
   @override
   Widget build(BuildContext context) {
     Widget titleSection = ListView.builder(
@@ -34,12 +49,24 @@ class TopicScreen extends StatelessWidget {
               height: MediaQuery.of(context).size.height * 0.16,
               child: ElevatedButton(
                 onPressed: () {
-                  // Navigator.push(
-                  //   context,
-                  //   MaterialPageRoute(
-                  //     builder: (context) => MatchingScreen(),
-                  //   ),
-                  // );
+                  roomID = getRandomString(6);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => MatchingScreen(roomID),
+                    ),
+                  );
+                  rooms.doc(roomID).set({
+                    'room': roomID,
+                    'user1': name,
+                    'email1': _authMail,
+                    'user2': '',
+                    'email2': '',
+                    'date':
+                        '${today.day}-${today.month}-${today.year} ${today.hour}:${today.minute}',
+                    'state': 0,
+                    'topic': item.topic
+                  });
                 },
                 style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.all(
@@ -103,6 +130,13 @@ class TopicScreen extends StatelessWidget {
     );
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(
+            Icons.arrow_back,
+            color: Color.fromARGB(255, 5, 33, 71),
+          ),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
         backgroundColor: const Color.fromARGB(255, 237, 243, 255),
         elevation: 0,
         centerTitle: true,

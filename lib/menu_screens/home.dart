@@ -2,6 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:quizz_game_is_that_you/main.dart';
+import 'package:quizz_game_is_that_you/the_others/matching.dart';
 import 'package:quizz_game_is_that_you/the_others/question.dart';
 import 'package:quizz_game_is_that_you/the_others/topic.dart';
 
@@ -14,10 +16,18 @@ class _HomeScreenState extends State<HomeScreen> {
   final _authMail = FirebaseAuth.instance.currentUser!.email;
   final users = FirebaseFirestore.instance.collection('Users');
   final singles = FirebaseFirestore.instance.collection('Single');
+  var rooms = FirebaseFirestore.instance.collection('Rooms');
   late String username;
+  var roomController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
+    Future<int> getLength() async {
+      int count =
+          await users.where('email', isEqualTo: _authMail).snapshots().length;
+      return count;
+    }
+
     Widget singleSection = AlertDialog(
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.all(
@@ -134,11 +144,24 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       content: SizedBox(
         width: MediaQuery.of(context).size.width * 0.5,
-        height: 42,
-        child: TextField(
-          keyboardType: TextInputType.number,
+        child: TextFormField(
+          controller: roomController,
+          textInputAction: TextInputAction.next,
+          autovalidateMode: AutovalidateMode.onUserInteraction,
+          validator: (value) =>
+              value != null && value.isNotEmpty && value.length != 6
+                  ? 'Mã phòng đủ 6 ký tự'
+                  : null,
           textAlign: TextAlign.center,
           decoration: InputDecoration(
+            errorBorder: OutlineInputBorder(
+              borderSide: const BorderSide(color: Colors.red),
+              borderRadius: BorderRadius.circular(20),
+            ),
+            focusedErrorBorder: OutlineInputBorder(
+              borderSide: const BorderSide(color: Colors.red),
+              borderRadius: BorderRadius.circular(20),
+            ),
             fillColor: const Color.fromARGB(255, 202, 221, 255),
             filled: true,
             contentPadding: const EdgeInsets.only(top: 3),
@@ -168,39 +191,150 @@ class _HomeScreenState extends State<HomeScreen> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              SizedBox(
-                height: 40,
-                child: ElevatedButton(
-                  onPressed: () => Navigator.pop(context),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color.fromARGB(255, 255, 0, 0),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15),
+              Flexible(
+                flex: 1,
+                child: SizedBox(
+                  height: 40,
+                  child: ElevatedButton(
+                    onPressed: () => Navigator.pop(context),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color.fromARGB(255, 255, 0, 0),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15),
+                      ),
                     ),
-                  ),
-                  child: Text(
-                    'Cancel',
-                    style: GoogleFonts.poppins(
-                      fontSize: 15,
+                    child: Text(
+                      'Cancel',
+                      style: GoogleFonts.poppins(
+                        fontSize: 15,
+                      ),
                     ),
                   ),
                 ),
               ),
-              SizedBox(
-                width: MediaQuery.of(context).size.width * 0.22,
-                height: 40,
-                child: ElevatedButton(
-                  onPressed: () {},
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color.fromARGB(255, 129, 169, 105),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15),
+              Flexible(
+                flex: 1,
+                child: SizedBox(
+                  height: 40,
+                  width: MediaQuery.of(context).size.width * 0.23,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                      showModalBottomSheet(
+                        context: context,
+                        builder: (context) {
+                          return Container(
+                            height: MediaQuery.of(context).size.height * 0.4,
+                            decoration: const BoxDecoration(
+                              color: Color.fromARGB(255, 237, 243, 255),
+                              borderRadius: BorderRadius.vertical(
+                                top: Radius.circular(30),
+                              ),
+                            ),
+                            child: StreamBuilder(
+                              stream: rooms
+                                  .where('room',
+                                      isEqualTo: roomController.text.trim())
+                                  .where('state', isEqualTo: 0)
+                                  .snapshots(),
+                              builder: (context,
+                                  AsyncSnapshot<QuerySnapshot> snapshot) {
+                                if (snapshot.hasData) {
+                                  return Column(
+                                    children: snapshot.data!.docs.map(
+                                      (room) {
+                                        return Column(
+                                          children: [
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.fromLTRB(
+                                                      30, 20, 30, 10),
+                                              child: Text(
+                                                textAlign: TextAlign.center,
+                                                'Your friend is waiting for you!',
+                                                style: GoogleFonts.poppins(
+                                                  color: const Color.fromARGB(
+                                                      255, 5, 33, 71),
+                                                  fontSize: 15,
+                                                  fontWeight: FontWeight.w600,
+                                                ),
+                                                softWrap: true,
+                                              ),
+                                            ),
+                                            SizedBox(
+                                              height: 40,
+                                              width: MediaQuery.of(context)
+                                                      .size
+                                                      .width *
+                                                  0.4,
+                                              child: ElevatedButton(
+                                                onPressed: () {
+                                                  Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          MatchingScreen(
+                                                              room['room']),
+                                                    ),
+                                                  );
+                                                  rooms
+                                                      .doc(room['room'])
+                                                      .update(
+                                                    {
+                                                      'email2': _authMail,
+                                                      'user2': username,
+                                                    },
+                                                  );
+                                                },
+                                                style: ElevatedButton.styleFrom(
+                                                  backgroundColor:
+                                                      const Color.fromARGB(
+                                                          255, 5, 33, 71),
+                                                  shape: RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            15),
+                                                  ),
+                                                ),
+                                                child: Text(
+                                                  'Join now',
+                                                  style: GoogleFonts.poppins(
+                                                    fontSize: 17,
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        );
+                                      },
+                                    ).toList(),
+                                  );
+                                } else {
+                                  return Text(
+                                    'Phòng không tồn tại',
+                                    style: GoogleFonts.poppins(
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 20,
+                                    ),
+                                  );
+                                }
+                              },
+                            ),
+                          );
+                        },
+                      );
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color.fromARGB(255, 129, 169, 105),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15),
+                      ),
                     ),
-                  ),
-                  child: Text(
-                    'OK',
-                    style: GoogleFonts.poppins(
-                      fontSize: 15,
+                    child: Text(
+                      'OK',
+                      style: GoogleFonts.poppins(
+                        fontSize: 15,
+                      ),
                     ),
                   ),
                 ),
@@ -389,7 +523,7 @@ class _HomeScreenState extends State<HomeScreen> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => TopicScreen(),
+                builder: (context) => TopicScreen(name: username),
               ),
             );
           },
