@@ -167,8 +167,12 @@ class _MatchingScreenState extends State<MatchingScreen> {
                                 child: ElevatedButton(
                                   onPressed: () {
                                     if (room['user2'] != '') {
-                                      room.reference.update(
-                                          {'state': 1, 'suns1': 0, 'no1': 0});
+                                      room.reference.update({
+                                        'state': 1,
+                                        'suns1': 0,
+                                        'suns2': 0,
+                                        'no1': 0,
+                                      });
                                       categoryUser = 'user1';
                                       Timer(const Duration(seconds: 2), () {
                                         Navigator.push(
@@ -249,8 +253,7 @@ class _MatchingScreenState extends State<MatchingScreen> {
                                 child: ElevatedButton(
                                   onPressed: () {
                                     if (room['state'] != 0) {
-                                      room.reference
-                                          .update({'suns2': 0, 'no2': 0});
+                                      room.reference.update({'no2': 0});
                                       categoryUser = 'user2';
                                       Navigator.push(
                                         context,
