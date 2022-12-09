@@ -2,7 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 import 'package:quizz_game_is_that_you/the_others/edit_profile.dart';
+import 'package:intl/date_symbol_data_local.dart';
 
 class ProfileScreen extends StatefulWidget {
   @override
@@ -120,14 +122,14 @@ class ProfileState extends State<ProfileScreen> {
                           ),
                         ),
                         Text(
-                          'Male',
+                          _users['gender'],
                           style: GoogleFonts.poppins(
                             fontSize: 17,
                             fontWeight: FontWeight.normal,
                           ),
                         ),
                         Text(
-                          'Joined',
+                         DateFormat('dd-MM-yyyy').format( _users['joined'].toDate()).toString(),
                           style: GoogleFonts.poppins(
                               fontSize: 17,
                               fontWeight: FontWeight.normal,

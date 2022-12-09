@@ -16,9 +16,23 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   var _users = FirebaseFirestore.instance.collection('Users');
   var _ranks = FirebaseFirestore.instance.collection('Ranks');
   List<String> itemsGender = ['Male', 'Female'];
-  String? selectGender = 'Male';
-  List<String> itemsAge = ['18', '19', '20'];
-  String? selectAge = '18';
+  String? selectGender = "Male";
+  DateTime today = DateTime.now();
+  List<String> itemsAge = [
+    '10',
+    '11',
+    '12',
+    '13',
+    '14',
+    '15',
+    '16',
+    '17',
+    '18',
+    '19',
+    '20'
+  ];
+  String? selectAge = "18";
+  // enum Gender{Male,Female}
   @override
   Widget build(BuildContext context) {
     Widget background = Padding(
@@ -59,189 +73,208 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       ),
     );
     Widget formSection = Padding(
-      padding: const EdgeInsets.fromLTRB(30, 0, 30, 0),
-      child: Column(
-        children: [
-          Column(
-            children: [
-              Row(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(10, 10, 0, 2),
-                    child: Text(
-                      'Full Name',
-                      style: GoogleFonts.poppins(
-                        fontSize: 17,
-                        color: const Color.fromARGB(255, 5, 33, 71),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(
-                width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.height * 0.07,
-                child: StreamBuilder(
-                    stream:
-                        _users.where('email', isEqualTo: _authMail).snapshots(),
-                    builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                      if (snapshot.hasData) {
-                        return Column(
-                          children: snapshot.data!.docs.map((_users) {
-                            return TextField(
-                              controller: _name,
-                              style: const TextStyle(
-                                fontSize: 15,
-                              ),
-                              decoration: InputDecoration(
-                                fillColor:
-                                    const Color.fromARGB(255, 202, 221, 255),
-                                filled: true,
-                                contentPadding:
-                                    const EdgeInsets.fromLTRB(15, 3, 0, 0),
-                                hintText: _name.text = _users['username'],
-                                hintStyle: GoogleFonts.poppins(
-                                  color:
-                                      const Color.fromARGB(255, 126, 148, 184),
+        padding: const EdgeInsets.fromLTRB(30, 0, 30, 0),
+        child: StreamBuilder(
+            stream: _users.where('email', isEqualTo: _authMail).snapshots(),
+            builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+              if (snapshot.hasData) {
+                return Column(
+                  children: snapshot.data!.docs.map((_users) {
+                    return Column(
+                      children: [
+                        Column(
+                          children: [
+                            Row(
+                              children: [
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(10, 10, 0, 2),
+                                  child: Text(
+                                    'Full Name',
+                                    style: GoogleFonts.poppins(
+                                      fontSize: 17,
+                                      color:
+                                          const Color.fromARGB(255, 5, 33, 71),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width,
+                              height: MediaQuery.of(context).size.height * 0.07,
+                              child: TextField(
+                                controller: _name,
+                                style: const TextStyle(
                                   fontSize: 15,
                                 ),
-                                enabledBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(20),
-                                  borderSide: const BorderSide(
-                                    color: Color.fromARGB(255, 196, 219, 237),
+                                decoration: InputDecoration(
+                                  fillColor:
+                                      const Color.fromARGB(255, 202, 221, 255),
+                                  filled: true,
+                                  contentPadding:
+                                      const EdgeInsets.fromLTRB(15, 3, 0, 0),
+                                  hintText: _name.text = _users['username'],
+                                  hintStyle: GoogleFonts.poppins(
+                                    color: const Color.fromARGB(
+                                        255, 126, 148, 184),
+                                    fontSize: 15,
                                   ),
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderSide: const BorderSide(
-                                    color: Color.fromARGB(255, 84, 121, 247),
+                                  enabledBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(20),
+                                    borderSide: const BorderSide(
+                                      color: Color.fromARGB(255, 196, 219, 237),
+                                    ),
                                   ),
-                                  borderRadius: BorderRadius.circular(20),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderSide: const BorderSide(
+                                      color: Color.fromARGB(255, 84, 121, 247),
+                                    ),
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
                                 ),
                               ),
-                            );
-                          }).toList(),
-                        );
-                      }
-                      return Text('No data');
-                    }),
-              ),
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(10, 5, 0, 2),
-                    child: Text(
-                      'Gender',
-                      style: GoogleFonts.poppins(
-                        fontSize: 17,
-                        color: const Color.fromARGB(255, 5, 33, 71),
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.4,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20),
-                        color: const Color.fromARGB(255, 202, 221, 255),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.fromLTRB(15, 0, 10, 0),
-                        child: DropdownButtonHideUnderline(
-                          child: DropdownButton<String>(
-                            borderRadius: BorderRadius.circular(20),
-                            focusColor: const Color.fromARGB(255, 84, 121, 247),
-                            iconSize: 30,
-                            iconEnabledColor: Colors.black,
-                            value: selectGender,
-                            items: itemsGender
-                                .map(
-                                  (item) => DropdownMenuItem<String>(
-                                    value: item,
-                                    child: Text(
-                                      item,
-                                      style: GoogleFonts.poppins(
-                                        color: const Color.fromARGB(
-                                            255, 5, 33, 71),
-                                        fontSize: 15,
+                            ),
+                          ],
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(10, 5, 0, 2),
+                                  child: Text(
+                                    'Gender',
+                                    style: GoogleFonts.poppins(
+                                      fontSize: 17,
+                                      color:
+                                          const Color.fromARGB(255, 5, 33, 71),
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.4,
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(20),
+                                      color: const Color.fromARGB(
+                                          255, 202, 221, 255),
+                                    ),
+                                    child: Padding(
+                                      padding: const EdgeInsets.fromLTRB(
+                                          15, 0, 10, 0),
+                                      child: DropdownButtonHideUnderline(
+                                        child: DropdownButton<String>(
+                                          borderRadius:
+                                              BorderRadius.circular(20),
+                                          focusColor: const Color.fromARGB(
+                                              255, 84, 121, 247),
+                                          iconSize: 30,
+                                          iconEnabledColor: Colors.black,
+                                          value: selectGender,
+                                          items: itemsGender
+                                              .map(
+                                                (item) =>
+                                                    DropdownMenuItem<String>(
+                                                  value: item,
+                                                  child: Text(
+                                                    item,
+                                                    style: GoogleFonts.poppins(
+                                                      color:
+                                                          const Color.fromARGB(
+                                                              255, 5, 33, 71),
+                                                      fontSize: 15,
+                                                    ),
+                                                  ),
+                                                ),
+                                              )
+                                              .toList(),
+                                          onChanged: (item) => setState(
+                                              () => selectGender = item),
+                                        ),
                                       ),
                                     ),
                                   ),
-                                )
-                                .toList(),
-                            onChanged: (item) =>
-                                setState(() => selectGender = item),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(10, 5, 0, 2),
-                    child: Text(
-                      'Age',
-                      style: GoogleFonts.poppins(
-                        fontSize: 17,
-                        color: const Color.fromARGB(255, 5, 33, 71),
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    child: Container(
-                      width: MediaQuery.of(context).size.width * 0.4,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20),
-                        color: const Color.fromARGB(255, 202, 221, 255),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.fromLTRB(15, 0, 10, 0),
-                        child: DropdownButtonHideUnderline(
-                          child: DropdownButton<String>(
-                            borderRadius: BorderRadius.circular(20),
-                            focusColor: const Color.fromARGB(255, 84, 121, 247),
-                            iconSize: 30,
-                            iconEnabledColor:
-                                const Color.fromARGB(255, 5, 33, 71),
-                            value: selectAge,
-                            items: itemsAge
-                                .map(
-                                  (item) => DropdownMenuItem<String>(
-                                    value: item,
-                                    child: Text(
-                                      item,
-                                      style: GoogleFonts.poppins(
-                                        color: const Color.fromARGB(
-                                            255, 5, 33, 71),
-                                        fontSize: 15,
+                                ),
+                              ],
+                            ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(10, 5, 0, 2),
+                                  child: Text(
+                                    'Age',
+                                    style: GoogleFonts.poppins(
+                                      fontSize: 17,
+                                      color:
+                                          const Color.fromARGB(255, 5, 33, 71),
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(
+                                  child: Container(
+                                    width:
+                                        MediaQuery.of(context).size.width * 0.4,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(20),
+                                      color: const Color.fromARGB(
+                                          255, 202, 221, 255),
+                                    ),
+                                    child: Padding(
+                                      padding: const EdgeInsets.fromLTRB(
+                                          15, 0, 10, 0),
+                                      child: DropdownButtonHideUnderline(
+                                        child: DropdownButton<String>(
+                                          borderRadius:
+                                              BorderRadius.circular(20),
+                                          focusColor: const Color.fromARGB(
+                                              255, 84, 121, 247),
+                                          iconSize: 30,
+                                          iconEnabledColor:
+                                              const Color.fromARGB(
+                                                  255, 5, 33, 71),
+                                          value: selectAge,
+                                          items: itemsAge
+                                              .map(
+                                                (item) =>
+                                                    DropdownMenuItem<String>(
+                                                  value: item,
+                                                  child: Text(
+                                                    item,
+                                                    style: GoogleFonts.poppins(
+                                                      color:
+                                                          const Color.fromARGB(
+                                                              255, 5, 33, 71),
+                                                      fontSize: 15,
+                                                    ),
+                                                  ),
+                                                ),
+                                              )
+                                              .toList(),
+                                          onChanged: (item) =>
+                                              setState(() => selectAge = item),
+                                        ),
                                       ),
                                     ),
                                   ),
-                                )
-                                .toList(),
-                            onChanged: (item) =>
-                                setState(() => selectAge = item),
-                          ),
+                                ),
+                              ],
+                            )
+                          ],
                         ),
-                      ),
-                    ),
-                  ),
-                ],
-              )
-            ],
-          ),
-        ],
-      ),
-    );
+                      ],
+                    );
+                  }).toList(),
+                );
+              }
+              return Text("No data");
+            }));
 
     Widget buttonSection = Padding(
       padding: const EdgeInsets.fromLTRB(0, 30, 0, 10),
@@ -255,14 +288,43 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               onPressed: () {
                 if (_name.text.isNotEmpty) {
                   final String name = _name.text;
-                  _users.doc(_authMail).update({"username": name});
-
-                  _ranks
-                      .where('email', isEqualTo: _authMail)
-                      .get()
-                      .then((value) {
-                    _ranks.doc('email').update({"user": name});
+                  _users.doc(_authMail).update({
+                    "username": name,
+                    "gender": selectGender,
+                    "age": selectAge
                   });
+                  // if(_ranks.doc('$_authMail${today.day}-${today.month}-${today.year}')==null){
+                  //      _ranks
+                  //     .where("email", isEqualTo: _authMail)
+                  //     .where("date",
+                  //         isEqualTo:
+                  //             '${today.day}-${today.month}-${today.year}')
+                  //     .get()
+                  //     .then((value) {
+                  //   _ranks
+                  //       .doc(
+                  //           '$_authMail${today.day-1}-${today.month}-${today.year} ')
+                  //       .update({"user": name});
+                  // });
+
+                  // }else{
+                  //   _ranks
+                  //     .where("email", isEqualTo: _authMail)
+                  //     .where("date",
+                  //         isEqualTo:
+                  //             '${today.day}-${today.month}-${today.year}')
+                  //     .get()
+                  //     .then((value) {
+                  //   _ranks
+                  //       .doc(
+                  //           '$_authMail${today.day}-${today.month}-${today.year} ')
+                  //       .update({"user": name});
+                  //   _ranks
+                  //       .doc(
+                  //           '$_authMail${today.day-1}-${today.month}-${today.year} ')
+                  //       .update({"user": name});
+                  // });
+                  // }
                   showDialog(
                       context: context,
                       builder: ((context) {
