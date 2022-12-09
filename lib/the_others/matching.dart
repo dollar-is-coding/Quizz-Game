@@ -1,101 +1,110 @@
 import 'dart:async';
-import 'dart:math';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:quizz_game_is_that_you/menu.dart';
+import 'package:quizz_game_is_that_you/the_others/battle_question.dart';
 
 class MatchingScreen extends StatefulWidget {
-  final String topic;
-  MatchingScreen(this.topic);
+  final String roomID;
+  MatchingScreen(this.roomID);
   @override
-  State<MatchingScreen> createState() => _MatchingScreenState(this.topic);
+  State<MatchingScreen> createState() => _MatchingScreenState(this.roomID);
 }
 
 class _MatchingScreenState extends State<MatchingScreen> {
-  String topic;
-  _MatchingScreenState(this.topic);
-  int index = 5;
-  Timer? timer;
-  late String roomID;
-
-  final _chars = 'abcdefg hijklmnopqrstuvwxyz1234567890';
-  final Random _rnd = Random();
-  String getRandomString(int length) => String.fromCharCodes(Iterable.generate(
-      length, (_) => _chars.codeUnitAt(_rnd.nextInt(_chars.length))));
-
-  @override
-  void startCountDown() {
-    timer = Timer.periodic(
-        const Duration(
-          seconds: 1,
-        ), (_) {
-      if (index > 0) {
-        setState(() => index--);
-      }
-    });
-  }
-
-  @override
-  void initState() {
-    roomID = getRandomString(6);
-    super.initState();
-  }
+  String roomID;
+  _MatchingScreenState(this.roomID);
+  final _authMail = FirebaseAuth.instance.currentUser!.email;
+  final users = FirebaseFirestore.instance.collection('Users');
+  var rooms = FirebaseFirestore.instance.collection('Rooms');
+  late String topic;
+  late String categoryUser;
 
   @override
   Widget build(BuildContext context) {
     Widget mainSection = Padding(
-      padding: const EdgeInsets.fromLTRB(40, 0, 40, 0),
-      child: IntrinsicHeight(
-        // dòng này để sử dụng divider
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Column(
-              children: [
-                const CircleAvatar(
-                  backgroundImage: AssetImage('images/avatar.png'),
-                  minRadius: 60,
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 5),
-                  child: Text(
-                    'dollar.02',
-                    style: GoogleFonts.poppins(
-                      fontSize: 20,
-                      fontWeight: FontWeight.w500,
-                      color: const Color.fromARGB(255, 5, 33, 71),
+      padding: const EdgeInsets.fromLTRB(40, 20, 40, 0),
+      child: StreamBuilder(
+        stream: rooms.where('room', isEqualTo: roomID).snapshots(),
+        builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+          if (snapshot.hasData) {
+            return Column(
+              children: snapshot.data!.docs.map(
+                (room) {
+                  return IntrinsicHeight(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Flexible(
+                          flex: 1,
+                          child: Column(
+                            children: [
+                              const CircleAvatar(
+                                backgroundImage:
+                                    AssetImage('images/avatar.png'),
+                                minRadius: 60,
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(top: 5),
+                                child: Text(
+                                  room['user1'],
+                                  style: GoogleFonts.poppins(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.w500,
+                                    color: const Color.fromARGB(255, 5, 33, 71),
+                                  ),
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        const VerticalDivider(
+                          color:
+                              Color.fromARGB(255, 5, 33, 71), //color of divider
+                          thickness: 2, //thickness of divier line
+                          endIndent: 50,
+                          indent: 10,
+                        ),
+                        Flexible(
+                          flex: 1,
+                          child: Column(
+                            children: [
+                              CircleAvatar(
+                                backgroundImage: AssetImage(room['user2'] != ''
+                                    ? 'images/avatar_01.png'
+                                    : 'images/no_avatar.png'),
+                                minRadius: 60,
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(top: 5),
+                                child: Text(
+                                  room['user2'] == ''
+                                      ? 'User 2'
+                                      : room['user2'],
+                                  style: GoogleFonts.poppins(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.w500,
+                                    color: const Color.fromARGB(255, 5, 33, 71),
+                                  ),
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
                     ),
-                  ),
-                ),
-              ],
-            ),
-            const VerticalDivider(
-              color: Color.fromARGB(255, 5, 33, 71), //color of divider
-              thickness: 2, //thickness of divier line
-              endIndent: 50,
-              indent: 10,
-            ),
-            Column(
-              children: [
-                const CircleAvatar(
-                  backgroundImage: AssetImage('images/avatar_01.png'),
-                  minRadius: 60,
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 5),
-                  child: Text(
-                    'hana.2k4',
-                    style: GoogleFonts.poppins(
-                      fontSize: 20,
-                      fontWeight: FontWeight.w500,
-                      color: const Color.fromARGB(255, 5, 33, 71),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
+                  );
+                },
+              ).toList(),
+            );
+          }
+          return const Text('No user');
+        },
       ),
     );
 
@@ -103,15 +112,30 @@ class _MatchingScreenState extends State<MatchingScreen> {
       padding: const EdgeInsets.fromLTRB(15, 20, 15, 0),
       child: Column(
         children: [
-          Text(
-            'Science',
-            style: GoogleFonts.poppins(
-              fontSize: 17,
-              fontWeight: FontWeight.w500,
-            ),
+          StreamBuilder(
+            stream: rooms.where('room', isEqualTo: roomID).snapshots(),
+            builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+              if (snapshot.hasData) {
+                return Column(
+                  children: snapshot.data!.docs.map(
+                    (room) {
+                      topic = room['topic'];
+                      return Text(
+                        room['topic'],
+                        style: GoogleFonts.poppins(
+                          fontSize: 17,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      );
+                    },
+                  ).toList(),
+                );
+              }
+              return const Text('No user');
+            },
           ),
           Text(
-            ' The description pattern focuses on the details as part of the whole. If you give details about an object\'s appearance, you are describing.',
+            'The description pattern focuses on the details as part of the whole. If you give details about an object\'s appearance, you are describing.',
             style: GoogleFonts.poppins(
               fontSize: 15,
               fontWeight: FontWeight.normal,
@@ -122,65 +146,182 @@ class _MatchingScreenState extends State<MatchingScreen> {
       ),
     );
 
-    Widget countdownSection = Text(
-      "$index",
-      style: GoogleFonts.poppins(
-        fontSize: 30,
-        fontWeight: FontWeight.w700,
-        color: const Color.fromARGB(255, 5, 33, 71),
-      ),
-    );
-
     Widget buttonSection = Padding(
       padding: const EdgeInsets.fromLTRB(0, 30, 0, 20),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(right: 15),
-            child: SizedBox(
-              width: MediaQuery.of(context).size.width * 0.35,
-              height: 45,
-              child: ElevatedButton(
-                onPressed: () {
-                  startCountDown();
+      child: StreamBuilder(
+        stream: rooms.where('room', isEqualTo: roomID).snapshots(),
+        builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+          if (snapshot.hasData) {
+            return Column(
+              children: snapshot.data!.docs.map(
+                (room) {
+                  return room['email1'] == _authMail
+                      ? Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(right: 10),
+                              child: SizedBox(
+                                width: MediaQuery.of(context).size.width * 0.35,
+                                height: 45,
+                                child: ElevatedButton(
+                                  onPressed: () {
+                                    if (room['user2'] != '') {
+                                      room.reference.update(
+                                          {'state': 1, 'suns1': 0, 'no1': 0});
+                                      categoryUser = 'user1';
+                                      Timer(const Duration(seconds: 2), () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                BattleQuestionScreen(roomID,
+                                                    topic, categoryUser),
+                                          ),
+                                        );
+                                      });
+                                    }
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: room['user2'] != ''
+                                        ? const Color.fromARGB(255, 5, 33, 71)
+                                        : const Color.fromARGB(
+                                            255, 153, 185, 255),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(15),
+                                    ),
+                                  ),
+                                  child: Text(
+                                    'Start',
+                                    style: GoogleFonts.poppins(
+                                      fontSize: 17,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(left: 10),
+                              child: SizedBox(
+                                width: MediaQuery.of(context).size.width * 0.35,
+                                height: 45,
+                                child: ElevatedButton(
+                                  onPressed: () {
+                                    if (room['user2'] == '') {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              MainMenuScreen(),
+                                        ),
+                                      );
+                                      rooms.doc(roomID).delete();
+                                    }
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: room['user2'] == ''
+                                        ? const Color.fromARGB(255, 255, 0, 0)
+                                        : const Color.fromARGB(
+                                            255, 153, 185, 255),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(15),
+                                    ),
+                                  ),
+                                  child: Text(
+                                    'Cancel',
+                                    style: GoogleFonts.poppins(
+                                      fontSize: 17,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        )
+                      : Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(right: 10),
+                              child: SizedBox(
+                                width: MediaQuery.of(context).size.width * 0.35,
+                                height: 45,
+                                child: ElevatedButton(
+                                  onPressed: () {
+                                    if (room['state'] != 0) {
+                                      room.reference
+                                          .update({'suns2': 0, 'no2': 0});
+                                      categoryUser = 'user2';
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              BattleQuestionScreen(
+                                                  roomID, topic, categoryUser),
+                                        ),
+                                      );
+                                    }
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: room['state'] != 0
+                                        ? const Color.fromARGB(255, 5, 33, 71)
+                                        : const Color.fromARGB(
+                                            255, 153, 185, 255),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(15),
+                                    ),
+                                  ),
+                                  child: Text(
+                                    'Start',
+                                    style: GoogleFonts.poppins(
+                                      fontSize: 17,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(left: 10),
+                              child: SizedBox(
+                                width: MediaQuery.of(context).size.width * 0.35,
+                                height: 45,
+                                child: ElevatedButton(
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => MainMenuScreen(),
+                                      ),
+                                    );
+                                    rooms.doc(roomID).update({
+                                      'email2': '',
+                                      'user2': '',
+                                    });
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor:
+                                        const Color.fromARGB(255, 255, 0, 0),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(15),
+                                    ),
+                                  ),
+                                  child: Text(
+                                    'Quit',
+                                    style: GoogleFonts.poppins(
+                                      fontSize: 17,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            )
+                          ],
+                        );
                 },
-                style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color.fromARGB(255, 5, 33, 71),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15),
-                    )),
-                child: Text(
-                  'Start',
-                  style: GoogleFonts.poppins(
-                    fontSize: 17,
-                  ),
-                ),
-              ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(left: 15),
-            child: SizedBox(
-              width: MediaQuery.of(context).size.width * 0.35,
-              height: 45,
-              child: ElevatedButton(
-                onPressed: () => Navigator.pop(context),
-                style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color.fromARGB(255, 255, 0, 0),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15),
-                    )),
-                child: Text(
-                  'Quit',
-                  style: GoogleFonts.poppins(
-                    fontSize: 17,
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ],
+              ).toList(),
+            );
+          }
+          return const Text('No user');
+        },
       ),
     );
 
@@ -202,7 +343,6 @@ class _MatchingScreenState extends State<MatchingScreen> {
       body: Column(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
-          countdownSection,
           Column(
             children: [
               mainSection,
