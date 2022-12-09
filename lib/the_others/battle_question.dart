@@ -28,7 +28,7 @@ class _BattleQuestionScreenState extends State<BattleQuestionScreen> {
   int index = 30;
   int no = 1;
   int doubleScore = 1;
-  late int onLeaves;
+  int onLeaves = 0;
   late int suns;
   int sumSuns = 0;
   Color aColor = const Color.fromARGB(255, 202, 221, 255);
@@ -65,7 +65,8 @@ class _BattleQuestionScreenState extends State<BattleQuestionScreen> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => WinOrLoseScreen(roomID, categoryUser),
+                builder: (context) =>
+                    WinOrLoseScreen(roomID, categoryUser, onLeaves),
               ),
             );
           }
@@ -283,7 +284,7 @@ class _BattleQuestionScreenState extends State<BattleQuestionScreen> {
                                       context,
                                       MaterialPageRoute(
                                         builder: (context) => WinOrLoseScreen(
-                                            roomID, categoryUser),
+                                            roomID, categoryUser,onLeaves),
                                       ),
                                     );
                                   }
@@ -375,7 +376,7 @@ class _BattleQuestionScreenState extends State<BattleQuestionScreen> {
                                       context,
                                       MaterialPageRoute(
                                         builder: (context) => WinOrLoseScreen(
-                                            roomID, categoryUser),
+                                            roomID, categoryUser,onLeaves),
                                       ),
                                     );
                                   }
@@ -467,7 +468,7 @@ class _BattleQuestionScreenState extends State<BattleQuestionScreen> {
                                       context,
                                       MaterialPageRoute(
                                         builder: (context) => WinOrLoseScreen(
-                                            roomID, categoryUser),
+                                            roomID, categoryUser,onLeaves),
                                       ),
                                     );
                                   }
@@ -559,7 +560,7 @@ class _BattleQuestionScreenState extends State<BattleQuestionScreen> {
                                       context,
                                       MaterialPageRoute(
                                         builder: (context) => WinOrLoseScreen(
-                                            roomID, categoryUser),
+                                            roomID, categoryUser,onLeaves),
                                       ),
                                     );
                                   }
