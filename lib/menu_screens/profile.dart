@@ -1,6 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 import 'package:quizz_game_is_that_you/the_others/edit_profile.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -9,6 +11,8 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class ProfileState extends State<ProfileScreen> {
+  final _authMail = FirebaseAuth.instance.currentUser!.email;
+  var _users = FirebaseFirestore.instance.collection('Users');
   @override
   Widget build(BuildContext context) {
     Widget signOutDialog = AlertDialog(
@@ -96,31 +100,47 @@ class ProfileState extends State<ProfileScreen> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'dollar.02',
-                style: GoogleFonts.poppins(
-                  fontSize: 22,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-              Text(
-                'Male',
-                style: GoogleFonts.poppins(
-                  fontSize: 17,
-                  fontWeight: FontWeight.normal,
-                ),
-              ),
-              Text(
-                'Joined in May, 2022',
-                style: GoogleFonts.poppins(
-                    fontSize: 17,
-                    fontWeight: FontWeight.normal,
-                    color: const Color.fromARGB(255, 121, 138, 163)),
-              ),
-            ],
+          StreamBuilder(
+            stream: _users.where('email', isEqualTo: _authMail).snapshots(),
+            builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+              if (snapshot.hasData) {
+                return Column(
+                  children: snapshot.data!.docs.map((_users) {
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          // 'dollar.02',
+                          _users['username'],
+                          style: GoogleFonts.poppins(
+                            fontSize: 22,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        Text(
+                          _users['gender'],
+                          style: GoogleFonts.poppins(
+                            fontSize: 17,
+                            fontWeight: FontWeight.normal,
+                          ),
+                        ),
+                        Text(
+                          DateFormat('yMMMMd')
+                              .format(_users['joined'].toDate())
+                              .toString(),
+                          style: GoogleFonts.poppins(
+                              fontSize: 17,
+                              fontWeight: FontWeight.normal,
+                              color: const Color.fromARGB(255, 121, 138, 163)),
+                        ),
+                      ],
+                    );
+                  }).toList(),
+                );
+              }
+              return Text('No data');
+            },
+
           ),
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
