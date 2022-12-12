@@ -325,7 +325,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           actions: [
                             OutlinedButton(
                                 onPressed: () {
-                                  Navigator.pop(context);
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: ((context) =>
+                                              ProfileScreen())));
                                 },
                                 child: const Text('OK'))
                           ],
@@ -367,6 +371,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     );
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(
+            Icons.arrow_back,
+            color: Color.fromARGB(255, 5, 33, 71),
+          ),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
         elevation: 0,
         centerTitle: true,
         title: Text(
