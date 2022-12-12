@@ -230,10 +230,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             child: ElevatedButton(
               onPressed: () {},
               style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color.fromARGB(255, 5, 33, 71),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(15),
-                  )),
+                backgroundColor: const Color.fromARGB(255, 5, 33, 71),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15),
+                ),
+              ),
               child: Text(
                 'Save',
                 style: GoogleFonts.poppins(
