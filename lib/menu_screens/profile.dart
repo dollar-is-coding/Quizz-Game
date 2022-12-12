@@ -74,6 +74,7 @@ class ProfileState extends State<ProfileScreen> {
                 child: ElevatedButton(
                   onPressed: () {
                     FirebaseAuth.instance.signOut();
+                    Navigator.pop(context);
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color.fromARGB(255, 255, 0, 0),
@@ -140,7 +141,6 @@ class ProfileState extends State<ProfileScreen> {
               }
               return Text('No data');
             },
-
           ),
           Column(
             mainAxisAlignment: MainAxisAlignment.center,

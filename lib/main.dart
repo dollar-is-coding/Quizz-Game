@@ -1,15 +1,19 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:quizz_game_is_that_you/begin_screens/sign_in.dart';
 import 'package:quizz_game_is_that_you/begin_screens/verify_email.dart';
-import 'package:quizz_game_is_that_you/menu_screens/rank.dart';
 import 'package:quizz_game_is_that_you/utils.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  SystemChrome.setEnabledSystemUIMode(
+    SystemUiMode.immersiveSticky,
+    overlays: [SystemUiOverlay.top],
+  );
   runApp(QuizzGame());
 }
 
