@@ -366,6 +366,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     );
     return Scaffold(
       appBar: AppBar(
+        
         elevation: 0,
         centerTitle: true,
         title: Text(
