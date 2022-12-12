@@ -772,7 +772,6 @@ class _QuestionScreenState extends State<QuestionScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               question,
-              Text(doubleScore.toString()),
               fourAnswer,
               helpButton,
             ],
