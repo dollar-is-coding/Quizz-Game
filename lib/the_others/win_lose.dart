@@ -59,7 +59,7 @@ class _WinOrLoseScreenState extends State<WinOrLoseScreen> {
                               'is completing their turn!',
                               style: GoogleFonts.poppins(
                                 color: const Color.fromARGB(255, 5, 33, 71),
-                                fontSize: 166,
+                                fontSize: 16,
                                 fontWeight: FontWeight.w500,
                               ),
                             ),
