@@ -125,12 +125,12 @@ class RankScreenState extends State<RankScreen> {
               alignment: Alignment.center,
               child: ListTile(
                 leading: CircleAvatar(
-                  backgroundColor: Color.fromARGB(255, 202, 221, 255),
+                  backgroundColor: const Color.fromARGB(255, 202, 221, 255),
                   radius: 20,
                   child: Text(
                     '1',
                     style: GoogleFonts.poppins(
-                      color: Color.fromARGB(255, 5, 33, 71),
+                      color: const Color.fromARGB(255, 5, 33, 71),
                       fontWeight: FontWeight.w600,
                     ),
                   ),
