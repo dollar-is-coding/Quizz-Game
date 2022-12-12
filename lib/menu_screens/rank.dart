@@ -1,3 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -9,18 +12,18 @@ class RankScreen extends StatefulWidget {
 }
 
 class RankScreenState extends State<RankScreen> {
-  // DateTime today = DateTime.now();
-  // final _authMail = FirebaseAuth.instance.currentUser!.email;
-  // var users = FirebaseFirestore.instance.collection('Users');
-  // var ranks = FirebaseFirestore.instance.collection('Ranks');
+  DateTime today = DateTime.now();
+  final _authMail = FirebaseAuth.instance.currentUser!.email;
+  var users = FirebaseFirestore.instance.collection('Users');
+  var ranks = FirebaseFirestore.instance.collection('Ranks');
   @override
-  // void initState() {
-  //   super.initState();
-  //   users
-  //       .doc(_authMail)
-  //       .update({'${today.day}-${today.month}-${today.year}': 1, 'suns': 0});
-  //   ranks.doc(_authMail).set({'${today.day}-${today.month}-${today.year}': 0});
-  // }
+  void initState() {
+    super.initState();
+    users
+        .doc(_authMail)
+        .update({'${today.day}-${today.month}-${today.year}': 1, 'suns': 0});
+    ranks.doc(_authMail).set({'${today.day}-${today.month}-${today.year}': 0});
+  }
 
   Widget build(BuildContext context) {
     Widget top3Section = Padding(
@@ -125,12 +128,12 @@ class RankScreenState extends State<RankScreen> {
               alignment: Alignment.center,
               child: ListTile(
                 leading: CircleAvatar(
-                  backgroundColor: const Color.fromARGB(255, 202, 221, 255),
+                  backgroundColor: Color.fromARGB(255, 202, 221, 255),
                   radius: 20,
                   child: Text(
                     '1',
                     style: GoogleFonts.poppins(
-                      color: const Color.fromARGB(255, 5, 33, 71),
+                      color: Color.fromARGB(255, 5, 33, 71),
                       fontWeight: FontWeight.w600,
                     ),
                   ),
@@ -143,7 +146,7 @@ class RankScreenState extends State<RankScreen> {
                   ),
                 ),
                 trailing: Text(
-                  '10000', 
+                  '10000',
                   style: GoogleFonts.poppins(
                     fontSize: 16,
                     color: const Color.fromARGB(255, 5, 33, 71),
