@@ -10,7 +10,6 @@ class ProfileScreen extends StatefulWidget {
   @override
   ProfileState createState() => ProfileState();
 }
-
 class ProfileState extends State<ProfileScreen> {
   final _authMail = FirebaseAuth.instance.currentUser!.email;
   var _users = FirebaseFirestore.instance.collection('Users');
