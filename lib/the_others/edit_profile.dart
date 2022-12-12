@@ -1,5 +1,6 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:quizz_game_is_that_you/menu_screens/profile.dart';
@@ -286,7 +287,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             child: ElevatedButton(
               onPressed: () {
                 if (_name.text.isNotEmpty) {
-                  final String name = _name.text;
+                  final String name = _name.text.trim();
                   _users.doc(_authMail).update({
                     "username": name,
                     "gender": selectGender,

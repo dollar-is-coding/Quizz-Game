@@ -1,3 +1,7 @@
+
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -9,10 +13,9 @@ class RankScreen extends StatefulWidget {
 }
 
 class RankScreenState extends State<RankScreen> {
-  // DateTime today = DateTime.now();
-  // final _authMail = FirebaseAuth.instance.currentUser!.email;
+  DateTime today = DateTime.now();
+  final _authMail = FirebaseAuth.instance.currentUser!.email;
   // var users = FirebaseFirestore.instance.collection('Users');
-  // var ranks = FirebaseFirestore.instance.collection('Ranks');
   @override
   // void initState() {
   //   super.initState();
@@ -21,85 +24,108 @@ class RankScreenState extends State<RankScreen> {
   //       .update({'${today.day}-${today.month}-${today.year}': 1, 'suns': 0});
   //   ranks.doc(_authMail).set({'${today.day}-${today.month}-${today.year}': 0});
   // }
+  var _ranks = FirebaseFirestore.instance.collection('Ranks');
+  Future getuser1() async {
+    final user1 = _ranks
+        .where('date', isEqualTo:'${today.day-1}-${today.month}-${today.year}' )
+        .orderBy('suns', descending: true)
+        .limit(1)
+        .get()
+        .then((value) => print("_ranks['user']"));
+  }
 
   Widget build(BuildContext context) {
-    Widget top3Section = Padding(
-      padding: const EdgeInsets.fromLTRB(15, 0, 15, 15),
-      child: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-          color: const Color.fromARGB(255, 202, 221, 255),
-        ),
-        height: MediaQuery.of(context).size.height * 0.28,
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(20, 15, 20, 20),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              Column(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 5),
-                    child: Text(
-                      'USER02',
-                      style: GoogleFonts.poppins(
-                        fontWeight: FontWeight.w500,
-                        fontSize: 17,
-                        color: const Color.fromARGB(255, 5, 33, 71),
+    Widget top3Section = StreamBuilder(
+        stream: _ranks
+            .where('email', isEqualTo: _authMail)
+            .orderBy('suns', descending: true)
+            .snapshots(),
+        builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+          if (snapshot.hasData) {
+            return Column(
+              children: snapshot.data!.docs.map((_ranks) {
+                return Padding(
+                  padding: const EdgeInsets.fromLTRB(15, 0, 15, 15),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: const Color.fromARGB(255, 202, 221, 255),
+                    ),
+                    height: MediaQuery.of(context).size.height * 0.28,
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(20, 15, 20, 20),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(bottom: 5),
+                                child: Text(
+                                  'USER02',
+                                  style: GoogleFonts.poppins(
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 17,
+                                    color: const Color.fromARGB(255, 5, 33, 71),
+                                  ),
+                                ),
+                              ),
+                              Image(
+                                width: MediaQuery.of(context).size.width * 0.20,
+                                image: const AssetImage('images/top_two.png'),
+                              ),
+                            ],
+                          ),
+                          Column(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(bottom: 5),
+                                child: Text(
+                                  '${getuser1()}',
+                                  style: GoogleFonts.poppins(
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 19,
+                                    color: const Color.fromARGB(255, 5, 33, 71),
+                                  ),
+                                ),
+                              ),
+                              Image(
+                                width: MediaQuery.of(context).size.width * 0.25,
+                                image: const AssetImage('images/top_one.png'),
+                              ),
+                            ],
+                          ),
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(bottom: 5),
+                                child: Text(
+                                  'USER03',
+                                  style: GoogleFonts.poppins(
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 17,
+                                    color: const Color.fromARGB(255, 5, 33, 71),
+                                  ),
+                                ),
+                              ),
+                              Image(
+                                width: MediaQuery.of(context).size.width * 0.20,
+                                image: const AssetImage('images/top_three.png'),
+                              ),
+                            ],
+                          )
+                        ],
                       ),
                     ),
                   ),
-                  Image(
-                    width: MediaQuery.of(context).size.width * 0.20,
-                    image: const AssetImage('images/top_two.png'),
-                  ),
-                ],
-              ),
-              Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 5),
-                    child: Text(
-                      'USER01',
-                      style: GoogleFonts.poppins(
-                        fontWeight: FontWeight.w500,
-                        fontSize: 19,
-                        color: const Color.fromARGB(255, 5, 33, 71),
-                      ),
-                    ),
-                  ),
-                  Image(
-                    width: MediaQuery.of(context).size.width * 0.25,
-                    image: const AssetImage('images/top_one.png'),
-                  ),
-                ],
-              ),
-              Column(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 5),
-                    child: Text(
-                      'USER03',
-                      style: GoogleFonts.poppins(
-                        fontWeight: FontWeight.w500,
-                        fontSize: 17,
-                        color: const Color.fromARGB(255, 5, 33, 71),
-                      ),
-                    ),
-                  ),
-                  Image(
-                    width: MediaQuery.of(context).size.width * 0.20,
-                    image: const AssetImage('images/top_three.png'),
-                  ),
-                ],
-              )
-            ],
-          ),
-        ),
-      ),
-    );
+                );
+              }).toList(),
+            );
+          }
+          return const Text('No data');
+        });
     Widget textSection = Padding(
       padding: const EdgeInsets.fromLTRB(30, 10, 0, 0),
       child: Text(
@@ -143,7 +169,7 @@ class RankScreenState extends State<RankScreen> {
                   ),
                 ),
                 trailing: Text(
-                  '10000', 
+                  '10000',
                   style: GoogleFonts.poppins(
                     fontSize: 16,
                     color: const Color.fromARGB(255, 5, 33, 71),

@@ -109,9 +109,10 @@ class ProfileState extends State<ProfileScreen> {
             builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
               if (snapshot.hasData) {
                 return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  
                   children: snapshot.data!.docs.map((_users) {
                     return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
                           // 'dollar.02',
@@ -129,7 +130,7 @@ class ProfileState extends State<ProfileScreen> {
                           ),
                         ),
                         Text(
-                         DateFormat('dd-MM-yyyy').format( _users['joined'].toDate()).toString(),
+                         DateFormat('yMMMMd').format( _users['joined'].toDate()).toString(),
                           style: GoogleFonts.poppins(
                               fontSize: 17,
                               fontWeight: FontWeight.normal,
