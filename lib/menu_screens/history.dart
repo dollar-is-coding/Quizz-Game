@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:quizz_game_is_that_you/the_others/detail_history.dart';
 
 class HistoryScreen extends StatefulWidget {
   @override
@@ -21,7 +22,14 @@ class HistoryScreenState extends State<HistoryScreen> {
             child: SizedBox(
               height: MediaQuery.of(context).size.height * 0.10,
               child: ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => DetailHistoryScreen(),
+                    ),
+                  );
+                },
                 style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.all(
                     const Color.fromARGB(255, 202, 221, 255),
