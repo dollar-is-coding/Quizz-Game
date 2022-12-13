@@ -15,7 +15,7 @@ class RankScreen extends StatefulWidget {
 class RankScreenState extends State<RankScreen> {
   final _authMail = FirebaseAuth.instance.currentUser!.email;
   var _ranks = FirebaseFirestore.instance.collection('Ranks');
-
+  DateTime today = DateTime.now();
   @override
   Widget build(BuildContext context) {
     Widget top3Section = Padding(
@@ -114,8 +114,7 @@ class RankScreenState extends State<RankScreen> {
           stream: _ranks
               .where('date',
                   isEqualTo: '${today.day}-${today.month}-${today.year}')
-              //.orderBy('id', descending: false)
-              .limit(10)
+              //.orderBy('suns', descending: true)
               .snapshots(),
           builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
             if (snapshot.hasData) {
