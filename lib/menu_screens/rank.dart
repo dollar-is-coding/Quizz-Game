@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -12,19 +13,10 @@ class RankScreen extends StatefulWidget {
 }
 
 class RankScreenState extends State<RankScreen> {
-  DateTime today = DateTime.now();
   final _authMail = FirebaseAuth.instance.currentUser!.email;
-  var users = FirebaseFirestore.instance.collection('Users');
-  var ranks = FirebaseFirestore.instance.collection('Ranks');
+  var _ranks = FirebaseFirestore.instance.collection('Ranks');
   @override
-  void initState() {
-    super.initState();
-    users
-        .doc(_authMail)
-        .update({'${today.day}-${today.month}-${today.year}': 1, 'suns': 0});
-    ranks.doc(_authMail).set({'${today.day}-${today.month}-${today.year}': 0});
-  }
-
+  @override
   Widget build(BuildContext context) {
     Widget top3Section = Padding(
       padding: const EdgeInsets.fromLTRB(15, 0, 15, 15),
@@ -103,6 +95,7 @@ class RankScreenState extends State<RankScreen> {
         ),
       ),
     );
+
     Widget textSection = Padding(
       padding: const EdgeInsets.fromLTRB(30, 10, 0, 0),
       child: Text(

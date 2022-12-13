@@ -794,7 +794,6 @@ class _BattleQuestionScreenState extends State<BattleQuestionScreen> {
             children: [
               Column(
                 children: [
-                  Text(doubleScore.toString()),
                   solo,
                   question,
                 ],
