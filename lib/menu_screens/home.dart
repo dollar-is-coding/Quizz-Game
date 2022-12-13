@@ -22,11 +22,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    Future<int> getLength() async {
-      int count =
-          await users.where('email', isEqualTo: _authMail).snapshots().length;
-      return count;
-    }
 
     Widget singleSection = AlertDialog(
       shape: const RoundedRectangleBorder(
@@ -391,7 +386,6 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
                               borderRadius: BorderRadius.circular(20),
                             ),
-                            //prefixIcon: Icon(Icons.person),
                           ),
                         ),
                       ),

@@ -284,38 +284,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     "gender": selectGender,
                     "age": selectAge
                   });
-                  // if(_ranks.doc('$_authMail${today.day}-${today.month}-${today.year}')==null){
-                  //      _ranks
-                  //     .where("email", isEqualTo: _authMail)
-                  //     .where("date",
-                  //         isEqualTo:
-                  //             '${today.day}-${today.month}-${today.year}')
-                  //     .get()
-                  //     .then((value) {
-                  //   _ranks
-                  //       .doc(
-                  //           '$_authMail${today.day-1}-${today.month}-${today.year} ')
-                  //       .update({"user": name});
-                  // });
-
-                  // }else{
-                  //   _ranks
-                  //     .where("email", isEqualTo: _authMail)
-                  //     .where("date",
-                  //         isEqualTo:
-                  //             '${today.day}-${today.month}-${today.year}')
-                  //     .get()
-                  //     .then((value) {
-                  //   _ranks
-                  //       .doc(
-                  //           '$_authMail${today.day}-${today.month}-${today.year} ')
-                  //       .update({"user": name});
-                  //   _ranks
-                  //       .doc(
-                  //           '$_authMail${today.day-1}-${today.month}-${today.year} ')
-                  //       .update({"user": name});
-                  // });
-                  // }
                   showDialog(
                       context: context,
                       builder: ((context) {
@@ -324,7 +292,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           actions: [
                             OutlinedButton(
                                 onPressed: () {
-                                  Navigator.pop(context);
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: ((context) =>
+                                              ProfileScreen())));
                                 },
                                 child: const Text('OK'))
                           ],
@@ -348,10 +320,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 }
               },
               style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color.fromARGB(255, 5, 33, 71),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(15),
-                  )),
+                backgroundColor: const Color.fromARGB(255, 5, 33, 71),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15),
+                ),
+              ),
               child: Text(
                 'Save',
                 style: GoogleFonts.poppins(
@@ -365,6 +338,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     );
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(
+            Icons.arrow_back,
+            color: Color.fromARGB(255, 5, 33, 71),
+          ),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
         elevation: 0,
         centerTitle: true,
         title: Text(
