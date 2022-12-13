@@ -285,38 +285,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     "gender": selectGender,
                     "age": selectAge
                   });
-                  // if(_ranks.doc('$_authMail${today.day}-${today.month}-${today.year}')==null){
-                  //      _ranks
-                  //     .where("email", isEqualTo: _authMail)
-                  //     .where("date",
-                  //         isEqualTo:
-                  //             '${today.day}-${today.month}-${today.year}')
-                  //     .get()
-                  //     .then((value) {
-                  //   _ranks
-                  //       .doc(
-                  //           '$_authMail${today.day-1}-${today.month}-${today.year} ')
-                  //       .update({"user": name});
-                  // });
-
-                  // }else{
-                  //   _ranks
-                  //     .where("email", isEqualTo: _authMail)
-                  //     .where("date",
-                  //         isEqualTo:
-                  //             '${today.day}-${today.month}-${today.year}')
-                  //     .get()
-                  //     .then((value) {
-                  //   _ranks
-                  //       .doc(
-                  //           '$_authMail${today.day}-${today.month}-${today.year} ')
-                  //       .update({"user": name});
-                  //   _ranks
-                  //       .doc(
-                  //           '$_authMail${today.day-1}-${today.month}-${today.year} ')
-                  //       .update({"user": name});
-                  // });
-                  // }
                   showDialog(
                       context: context,
                       builder: ((context) {
