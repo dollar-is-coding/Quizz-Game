@@ -83,10 +83,17 @@ class _QuestionScreenState extends State<QuestionScreen> {
       startCountDown();
     });
     users.doc(_authMail).update({'suns': 0});
-    ranks.doc('$_authMail${today.day}-${today.month}-${today.year} ').set({
+    ranks
+        .doc(today.day < 10
+            ? '${_authMail}0${today.day}-${today.month}-${today.year}'
+            : '$_authMail${today.day}-${today.month}-${today.year}')
+        .set({
       'email': _authMail,
-      'date': '${today.day}-${today.month}-${today.year}',
+      'date': today.day < 10
+          ? '${today.day}-${today.month}-${today.year}'
+          : '${today.day}-${today.month}-${today.year}',
       'user': username,
+      'suns': 0,
     });
   }
 
@@ -265,8 +272,9 @@ class _QuestionScreenState extends State<QuestionScreen> {
                                   },
                                 );
                                 ranks
-                                    .doc(
-                                        '$_authMail${today.day}-${today.month}-${today.year} ')
+                                    .doc(today.day < 10
+                                        ? '${_authMail}0${today.day}-${today.month}-${today.year}'
+                                        : '$_authMail${today.day}-${today.month}-${today.year}')
                                     .update({'suns': onSuns});
                               } else {
                                 setState(() => aColor = Colors.red);
@@ -368,8 +376,9 @@ class _QuestionScreenState extends State<QuestionScreen> {
                                   },
                                 );
                                 ranks
-                                    .doc(
-                                        '$_authMail${today.day}-${today.month}-${today.year} ')
+                                    .doc(today.day < 10
+                                        ? '${_authMail}0${today.day}-${today.month}-${today.year}'
+                                        : '$_authMail${today.day}-${today.month}-${today.year}')
                                     .update({'suns': onSuns});
                               } else {
                                 setState(() => bColor = Colors.red);
@@ -471,8 +480,9 @@ class _QuestionScreenState extends State<QuestionScreen> {
                                   },
                                 );
                                 ranks
-                                    .doc(
-                                        '$_authMail${today.day}-${today.month}-${today.year} ')
+                                    .doc(today.day < 10
+                                        ? '${_authMail}0${today.day}-${today.month}-${today.year}'
+                                        : '$_authMail${today.day}-${today.month}-${today.year}')
                                     .update({'suns': onSuns});
                               } else {
                                 setState(() => cColor = Colors.red);
@@ -574,8 +584,9 @@ class _QuestionScreenState extends State<QuestionScreen> {
                                   },
                                 );
                                 ranks
-                                    .doc(
-                                        '$_authMail${today.day}-${today.month}-${today.year} ')
+                                    .doc(today.day < 10
+                                        ? '${_authMail}0${today.day}-${today.month}-${today.year}'
+                                        : '$_authMail${today.day}-${today.month}-${today.year}')
                                     .update({'suns': onSuns});
                               } else {
                                 setState(() => dColor = Colors.red);
