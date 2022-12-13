@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -11,7 +13,6 @@ class RankScreen extends StatefulWidget {
 }
 
 class RankScreenState extends State<RankScreen> {
-  DateTime today = DateTime.now();
   final _authMail = FirebaseAuth.instance.currentUser!.email;
   var _ranks = FirebaseFirestore.instance.collection('Ranks');
 

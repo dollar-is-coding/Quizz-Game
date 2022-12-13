@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:quizz_game_is_that_you/the_others/edit_profile.dart';
-import 'package:intl/date_symbol_data_local.dart';
 
 class ProfileScreen extends StatefulWidget {
   @override
@@ -35,18 +34,16 @@ class ProfileState extends State<ProfileScreen> {
           ),
         ),
       ),
-      content: Wrap(
-        children: [
-          Text(
-            textAlign: TextAlign.center,
-            'Are you sure to sign out ?',
-            style: GoogleFonts.poppins(
-              fontSize: 17,
-              color: Colors.white,
-            ),
+      content: Wrap(children: [
+        Text(
+          textAlign: TextAlign.center,
+          'Are you sure to sign out ?',
+          style: GoogleFonts.poppins(
+            fontSize: 17,
+            color: Colors.white,
           ),
-        ],
-      ),
+        ),
+      ]),
       actions: [
         Padding(
           padding: const EdgeInsets.only(bottom: 20),
@@ -109,7 +106,6 @@ class ProfileState extends State<ProfileScreen> {
             builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
               if (snapshot.hasData) {
                 return Column(
-                  
                   children: snapshot.data!.docs.map((_users) {
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -130,7 +126,10 @@ class ProfileState extends State<ProfileScreen> {
                           ),
                         ),
                         Text(
-                         DateFormat('yMMMMd').format( _users['joined'].toDate()).toString(),
+                          'Joined ' +
+                              DateFormat('yMMMMd')
+                                  .format(_users['joined'].toDate())
+                                  .toString(),
                           style: GoogleFonts.poppins(
                               fontSize: 17,
                               fontWeight: FontWeight.normal,
@@ -166,10 +165,11 @@ class ProfileState extends State<ProfileScreen> {
                       );
                     },
                     style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color.fromARGB(255, 5, 33, 71),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        )),
+                      backgroundColor: const Color.fromARGB(255, 5, 33, 71),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
                     child: Text(
                       'Edit',
                       style: GoogleFonts.poppins(

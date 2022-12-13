@@ -49,7 +49,8 @@ class SignInScreenState extends State<SignInScreen> {
           'email': emailController.text.trim(),
           'joined': DateTime.now(),
           'leaves': 100,
-          'suns': 0
+          'suns': 0,
+          'gender': 'Male'
         });
       } on FirebaseAuthException catch (e) {
         Utils.showSnackBar(e.message);
