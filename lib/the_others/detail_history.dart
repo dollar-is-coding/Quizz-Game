@@ -134,7 +134,7 @@ class _DetailHistoryScreenState extends State<DetailHistoryScreen> {
                             const Padding(
                               padding: EdgeInsets.only(right: 5),
                               child: Icon(
-                                Icons.eco_rounded,
+                                Icons.brightness_low_rounded,
                                 color: Color.fromARGB(255, 204, 193, 79),
                               ),
                             ),
@@ -290,13 +290,7 @@ class _DetailHistoryScreenState extends State<DetailHistoryScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(
-            Icons.arrow_back,
-            color: Color.fromARGB(255, 5, 33, 71),
-          ),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
+        automaticallyImplyLeading: false,
         elevation: 0,
         centerTitle: true,
         title: Text(
