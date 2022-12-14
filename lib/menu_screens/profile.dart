@@ -9,6 +9,7 @@ class ProfileScreen extends StatefulWidget {
   @override
   ProfileState createState() => ProfileState();
 }
+
 class ProfileState extends State<ProfileScreen> {
   final _authMail = FirebaseAuth.instance.currentUser!.email;
   var _users = FirebaseFirestore.instance.collection('Users');
@@ -73,7 +74,7 @@ class ProfileState extends State<ProfileScreen> {
                 child: ElevatedButton(
                   onPressed: () {
                     FirebaseAuth.instance.signOut();
-                    Navigator.pop(context);
+                    Navigator.popUntil(context, (route) => route.isFirst);
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color.fromARGB(255, 255, 0, 0),
