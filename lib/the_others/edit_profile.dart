@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:quizz_game_is_that_you/menu.dart';
 import 'package:quizz_game_is_that_you/menu_screens/profile.dart';
 
 class EditProfileScreen extends StatefulWidget {
@@ -297,7 +298,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                       context,
                                       MaterialPageRoute(
                                           builder: ((context) =>
-                                              ProfileScreen())));
+                                              MainMenuScreen())));
                                 },
                                 child: const Text('OK'))
                           ],
