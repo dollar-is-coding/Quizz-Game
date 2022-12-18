@@ -22,14 +22,7 @@ class HistoryScreenState extends State<HistoryScreen> {
             child: SizedBox(
               height: MediaQuery.of(context).size.height * 0.10,
               child: ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => DetailHistoryScreen(),
-                    ),
-                  );
-                },
+                onPressed: () {},
                 style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.all(
                     const Color.fromARGB(255, 202, 221, 255),
