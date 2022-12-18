@@ -57,7 +57,7 @@ class TopicScreen extends StatelessWidget {
                     ),
                   );
                   rooms.doc(roomID).set({
-                    'room': roomID,
+                    'room': roomID, 
                     'user1': name,
                     'email1': _authMail,
                     'user2': '',

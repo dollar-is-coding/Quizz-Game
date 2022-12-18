@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:quizz_game_is_that_you/main.dart';
 import 'package:quizz_game_is_that_you/the_others/matching.dart';
 import 'package:quizz_game_is_that_you/the_others/question.dart';
 import 'package:quizz_game_is_that_you/the_others/topic.dart';
@@ -22,7 +21,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-
     Widget singleSection = AlertDialog(
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.all(

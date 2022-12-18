@@ -422,7 +422,7 @@ class SignInScreenState extends State<SignInScreen> {
                         ),
                       ),
                       suffixIconConstraints:
-                          const BoxConstraints(minHeight: 30, minWidth: 30),
+                          const BoxConstraints(minHeight:  30, minWidth: 30),
                     ),
                   ),
                 ),

@@ -113,12 +113,13 @@ class ResultScreen extends StatelessWidget {
         height: MediaQuery.of(context).size.height * 0.06,
         child: ElevatedButton(
           onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => MainMenuScreen(),
-              ),
-            );
+            // Navigator.push(
+            //   context,
+            //   MaterialPageRoute(
+            //     builder: (context) => MainMenuScreen(),
+            //   ),
+            // );
+            Navigator.of(context).popUntil((route) => route.isFirst);
           },
           style: ButtonStyle(
             backgroundColor: MaterialStateProperty.all(

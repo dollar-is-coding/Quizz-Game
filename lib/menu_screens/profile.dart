@@ -34,16 +34,18 @@ class ProfileState extends State<ProfileScreen> {
           ),
         ),
       ),
-      content: Wrap(children: [
-        Text(
-          textAlign: TextAlign.center,
-          'Are you sure to sign out ?',
-          style: GoogleFonts.poppins(
-            fontSize: 17,
-            color: Colors.white,
+      content: Wrap(
+        children: [
+          Text(
+            textAlign: TextAlign.center,
+            'Are you sure to sign out ?',
+            style: GoogleFonts.poppins(
+              fontSize: 17,
+              color: Colors.white,
+            ),
           ),
-        ),
-      ]),
+        ],
+      ),
       actions: [
         Padding(
           padding: const EdgeInsets.only(bottom: 20),
@@ -105,39 +107,41 @@ class ProfileState extends State<ProfileScreen> {
             stream: _users.where('email', isEqualTo: _authMail).snapshots(),
             builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
               if (snapshot.hasData) {
-                return Column(
-                  children: snapshot.data!.docs.map((_users) {
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          // 'dollar.02',
-                          _users['username'],
-                          style: GoogleFonts.poppins(
-                            fontSize: 22,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                        Text(
-                          _users['gender'],
-                          style: GoogleFonts.poppins(
-                            fontSize: 17,
-                            fontWeight: FontWeight.normal,
-                          ),
-                        ),
-                        Text(
-                          'Joined ' +
-                              DateFormat('yMMMMd')
-                                  .format(_users['joined'].toDate())
-                                  .toString(),
-                          style: GoogleFonts.poppins(
-                              fontSize: 17,
-                              fontWeight: FontWeight.normal,
-                              color: const Color.fromARGB(255, 121, 138, 163)),
-                        ),
-                      ],
-                    );
-                  }).toList(),
+                return Flexible(
+                  child: Column(
+                    children: snapshot.data!.docs.map(
+                      (_users) {
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              // 'dollar.02',
+                              _users['username'],
+                              style: GoogleFonts.poppins(
+                                fontSize: 22,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                            Text(
+                              _users['gender'],
+                              style: GoogleFonts.poppins(
+                                fontSize: 17,
+                                fontWeight: FontWeight.normal,
+                              ),
+                            ),
+                            Text(
+                              'Joined ${DateFormat('yMMMMd').format(_users['joined'].toDate())}',
+                              style: GoogleFonts.poppins(
+                                fontSize: 17,
+                                fontWeight: FontWeight.normal,
+                                color: const Color.fromARGB(255, 121, 138, 163),
+                              ),
+                            ),
+                          ],
+                        );
+                      },
+                    ).toList(),
+                  ),
                 );
               }
               return Text('No data');

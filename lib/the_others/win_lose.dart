@@ -166,15 +166,13 @@ class _WinOrLoseScreenState extends State<WinOrLoseScreen> {
                             height: 45,
                             child: ElevatedButton(
                               onPressed: () {
-                                users.doc(_authMail).update({
-                                  'leaves': onLeaves += leavesGot,
-                                });
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => MainMenuScreen(),
-                                  ),
+                                users.doc(_authMail).update(
+                                  {
+                                    'leaves': onLeaves += leavesGot,
+                                  },
                                 );
+                                Navigator.popUntil(
+                                    context, (route) => route.isFirst);
                               },
                               style: ElevatedButton.styleFrom(
                                 backgroundColor:

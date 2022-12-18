@@ -88,66 +88,63 @@ class _DetailHistoryScreenState extends State<DetailHistoryScreen> {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  child: SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.10,
-                    child: ElevatedButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => DetailHistoryScreen(),
-                          ),
-                        );
-                      },
-                      style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all(
-                          const Color.fromARGB(255, 202, 221, 255),
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => DetailHistoryScreen(),
                         ),
-                        shape: MaterialStateProperty.all(
-                          RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                        ),
-                        elevation: MaterialStateProperty.all(0),
+                      );
+                    },
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all(
+                        const Color.fromARGB(255, 202, 221, 255),
                       ),
-                      child: ListTile(
-                        leading: const CircleAvatar(
-                          backgroundColor: Color.fromARGB(255, 237, 243, 255),
-                          child: Icon(
-                            Icons.calendar_month,
-                            color: Color.fromARGB(255, 5, 33, 71),
+                      shape: MaterialStateProperty.all(
+                        RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                      elevation: MaterialStateProperty.all(0),
+                    ),
+                    child: ListTile(
+                      leading: const CircleAvatar(
+                        backgroundColor: Color.fromARGB(255, 237, 243, 255),
+                        child: Icon(
+                          Icons.calendar_month,
+                          color: Color.fromARGB(255, 5, 33, 71),
+                        ),
+                      ),
+                      title: Padding(
+                        padding: const EdgeInsets.only(bottom: 5),
+                        child: Text(
+                          ('Date ${data.docs[index]['date']}'),
+                          style: GoogleFonts.poppins(
+                            fontSize: 15,
+                            fontWeight: FontWeight.w500,
+                            color: const Color.fromARGB(255, 24, 43, 80),
                           ),
                         ),
-                        title: Padding(
-                          padding: const EdgeInsets.only(bottom: 5),
-                          child: Text(
-                            ('Date ${data.docs[index]['date']}'),
+                      ),
+                      subtitle: Row(
+                        children: [
+                          const Padding(
+                            padding: EdgeInsets.only(right: 5),
+                            child: Icon(
+                              Icons.brightness_low_rounded,
+                              color: Color.fromARGB(255, 204, 193, 79),
+                            ),
+                          ),
+                          Text(
+                            ('${data.docs[index]['suns']}'),
                             style: GoogleFonts.poppins(
                               fontSize: 15,
                               fontWeight: FontWeight.w500,
                               color: const Color.fromARGB(255, 24, 43, 80),
                             ),
                           ),
-                        ),
-                        subtitle: Row(
-                          children: [
-                            const Padding(
-                              padding: EdgeInsets.only(right: 5),
-                              child: Icon(
-                                Icons.brightness_low_rounded,
-                                color: Color.fromARGB(255, 204, 193, 79),
-                              ),
-                            ),
-                            Text(
-                              ('${data.docs[index]['suns']}'),
-                              style: GoogleFonts.poppins(
-                                fontSize: 15,
-                                fontWeight: FontWeight.w500,
-                                color: const Color.fromARGB(255, 24, 43, 80),
-                              ),
-                            ),
-                          ],
-                        ),
+                        ],
                       ),
                     ),
                   ),

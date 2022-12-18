@@ -33,8 +33,8 @@ class _QuestionScreenState extends State<QuestionScreen> {
   final questionHistories =
       FirebaseFirestore.instance.collection('Question History');
 
-  CollectionReference sciences =
-      FirebaseFirestore.instance.collection('Science');
+  CollectionReference mixedQuestion =
+      FirebaseFirestore.instance.collection('Mixed question');
   Color aColor = const Color.fromARGB(255, 202, 221, 255);
   Color bColor = const Color.fromARGB(255, 202, 221, 255);
   Color cColor = const Color.fromARGB(255, 202, 221, 255);
@@ -108,7 +108,7 @@ class _QuestionScreenState extends State<QuestionScreen> {
         borderRadius: BorderRadius.circular(10),
       ),
       child: StreamBuilder(
-        stream: sciences.where('no', isEqualTo: no).snapshots(),
+        stream: mixedQuestion.where('no', isEqualTo: no).snapshots(),
         builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (snapshot.hasData) {
             return ListView(
@@ -184,10 +184,10 @@ class _QuestionScreenState extends State<QuestionScreen> {
           return const Text('No data');
         },
       ),
-    );
+    ); 
 
     Widget fourAnswer = StreamBuilder(
-      stream: sciences.where('no', isEqualTo: no).snapshots(),
+      stream: mixedQuestion.where('no', isEqualTo: no).snapshots(),
       builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
         if (snapshot.hasData) {
           return ListView(
