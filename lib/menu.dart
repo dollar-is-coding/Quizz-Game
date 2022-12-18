@@ -30,23 +30,21 @@ class MainMenuScreenState extends State<MainMenuScreen> {
       const Icon(Icons.person_rounded, size: 35),
     ];
 
-    return SafeArea(
-      child: Scaffold(
-        extendBody: true,
-        body: screens[index],
-        bottomNavigationBar: Theme(
-          data: Theme.of(context).copyWith(
-            iconTheme: const IconThemeData(color: Colors.white),
-          ),
-          child: CurvedNavigationBar(
-            color: const Color.fromARGB(255, 5, 33, 71),
-            buttonBackgroundColor: const Color.fromARGB(255, 5, 33, 71),
-            backgroundColor: Colors.transparent,
-            height: 55,
-            items: items,
-            animationDuration: const Duration(milliseconds: 250),
-            onTap: (index) => setState(() => this.index = index),
-          ),
+    return Scaffold(
+      extendBody: true,
+      body: screens[index],
+      bottomNavigationBar: Theme(
+        data: Theme.of(context).copyWith(
+          iconTheme: const IconThemeData(color: Colors.white),
+        ),
+        child: CurvedNavigationBar(
+          color: const Color.fromARGB(255, 5, 33, 71),
+          buttonBackgroundColor: const Color.fromARGB(255, 5, 33, 71),
+          backgroundColor: Colors.transparent,
+          height: 55,
+          items: items,
+          animationDuration: const Duration(milliseconds: 250),
+          onTap: (index) => setState(() => this.index = index),
         ),
       ),
     );
