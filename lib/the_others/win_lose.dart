@@ -171,8 +171,8 @@ class _WinOrLoseScreenState extends State<WinOrLoseScreen> {
                                     'leaves': onLeaves += leavesGot,
                                   },
                                 );
-                                Navigator.popUntil(
-                                    context, (route) => route.isFirst);
+                                Navigator.of(context)
+                                    .popUntil((route) => route.isFirst);
                               },
                               style: ElevatedButton.styleFrom(
                                 backgroundColor:

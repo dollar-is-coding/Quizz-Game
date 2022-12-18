@@ -287,23 +287,25 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     "age": selectAge
                   });
                   showDialog(
-                      context: context,
-                      builder: ((context) {
-                        return AlertDialog(
-                          title: const Text('Thành công'),
-                          actions: [
-                            OutlinedButton(
-                                onPressed: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: ((context) =>
-                                              MainMenuScreen())));
-                                },
-                                child: const Text('OK'))
-                          ],
-                        );
-                      }));
+                    context: context,
+                    builder: ((context) {
+                      return AlertDialog(
+                        title: const Text('Thành công'),
+                        actions: [
+                          OutlinedButton(
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: ((context) => MainMenuScreen()),
+                                  ),
+                                );
+                              },
+                              child: const Text('OK'))
+                        ],
+                      );
+                    }),
+                  );
                 } else {
                   showDialog(
                       context: context,
