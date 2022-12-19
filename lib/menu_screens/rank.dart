@@ -111,11 +111,7 @@ class RankScreenState extends State<RankScreen> {
     Widget listViewSection = Padding(
       padding: const EdgeInsets.fromLTRB(15, 0, 15, 5),
       child: StreamBuilder(
-          stream: _ranks
-              .where('date',
-                  isEqualTo: '${today.day}-${today.month}-${today.year}')
-              //.orderBy('suns', descending: true)
-              .snapshots(),
+          stream: _ranks.orderBy('suns', descending: true).snapshots(),
           builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
             if (snapshot.hasData) {
               int i = 0;
