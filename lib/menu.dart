@@ -1,11 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
-import 'package:quizz_game_is_that_you/menu_screens/history.dart';
 import 'package:quizz_game_is_that_you/menu_screens/home.dart';
 import 'package:quizz_game_is_that_you/menu_screens/profile.dart';
 import 'package:quizz_game_is_that_you/menu_screens/rank.dart';
-import 'package:quizz_game_is_that_you/the_others/detail_history.dart';
+import 'package:quizz_game_is_that_you/menu_screens/history.dart';
 
 class MainMenuScreen extends StatefulWidget {
   @override
@@ -16,7 +15,7 @@ class MainMenuScreenState extends State<MainMenuScreen> {
   int index = 0;
   final screens = [
     HomeScreen(),
-    DetailHistoryScreen(),
+    HistoryScreen(),
     RankScreen(),
     ProfileScreen(),
   ];

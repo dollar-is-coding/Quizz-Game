@@ -181,73 +181,75 @@ class _BattleQuestionScreenState extends State<BattleQuestionScreen> {
         builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (snapshot.hasData) {
             return ListView(
-              children: snapshot.data!.docs.map((topic) {
-                return Column(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            'Question ${topic['no'].toString()}',
-                            style: GoogleFonts.poppins(
-                              color: Colors.white,
+              children: snapshot.data!.docs.map(
+                (topic) {
+                  return Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              'Question ${topic['no'].toString()}',
+                              style: GoogleFonts.poppins(
+                                color: Colors.white,
+                              ),
                             ),
-                          ),
-                          Text(
-                            '$index',
-                            style: index >= 10
-                                ? GoogleFonts.poppins(
+                            Text(
+                              '$index',
+                              style: index >= 10
+                                  ? GoogleFonts.poppins(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w500,
+                                    )
+                                  : GoogleFonts.poppins(
+                                      color: Colors.red,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                            ),
+                            Row(
+                              children: [
+                                const Icon(
+                                  Icons.brightness_low_rounded,
+                                  color: Color.fromARGB(255, 204, 193, 79),
+                                ),
+                                Text(
+                                  '30',
+                                  style: GoogleFonts.poppins(
                                     color: Colors.white,
                                     fontWeight: FontWeight.w500,
-                                  )
-                                : GoogleFonts.poppins(
-                                    color: Colors.red,
-                                    fontWeight: FontWeight.w500,
                                   ),
-                          ),
-                          Row(
-                            children: [
-                              const Icon(
-                                Icons.brightness_low_rounded,
-                                color: Color.fromARGB(255, 204, 193, 79),
-                              ),
-                              Text(
-                                '30',
-                                style: GoogleFonts.poppins(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w500,
                                 ),
-                              ),
-                            ],
-                          ),
-                        ],
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                    Container(
-                      margin: const EdgeInsets.fromLTRB(10, 10, 10, 0),
-                      width: double.infinity,
-                      height: MediaQuery.of(context).size.height * 0.26,
-                      decoration: BoxDecoration(
-                        color: const Color.fromARGB(255, 202, 221, 255),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.fromLTRB(15, 10, 15, 10),
-                        child: Text(
-                          topic['question'],
-                          style: GoogleFonts.poppins(
-                            color: const Color.fromARGB(255, 5, 33, 71),
-                            fontWeight: FontWeight.w500,
-                            fontSize: 16,
+                      Container(
+                        margin: const EdgeInsets.fromLTRB(10, 10, 10, 0),
+                        width: double.infinity,
+                        height: MediaQuery.of(context).size.height * 0.26,
+                        decoration: BoxDecoration(
+                          color: const Color.fromARGB(255, 202, 221, 255),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.fromLTRB(15, 10, 15, 10),
+                          child: Text(
+                            topic['question'],
+                            style: GoogleFonts.poppins(
+                              color: const Color.fromARGB(255, 5, 33, 71),
+                              fontWeight: FontWeight.w500,
+                              fontSize: 16,
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  ],
-                );
-              }).toList(),
+                    ],
+                  );
+                },
+              ).toList(),
             );
           }
           return const Text('No data');
@@ -264,388 +266,390 @@ class _BattleQuestionScreenState extends State<BattleQuestionScreen> {
         if (snapshot.hasData) {
           return ListView(
             shrinkWrap: true,
-            children: snapshot.data!.docs.map((topic) {
-              return SizedBox(
-                height: MediaQuery.of(context).size.height * 0.32,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-                      child: SizedBox(
-                        width: double.infinity,
-                        height: MediaQuery.of(context).size.height * 0.065,
-                        child: ElevatedButton(
-                          onPressed: () {
-                            if (timer!.isActive) {
-                              timer?.cancel();
-                              Timer(
-                                const Duration(seconds: 2),
-                                () {
-                                  index = 30;
-                                  no++;
+            children: snapshot.data!.docs.map(
+              (topic) {
+                return SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.32,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+                        child: SizedBox(
+                          width: double.infinity,
+                          height: MediaQuery.of(context).size.height * 0.065,
+                          child: ElevatedButton(
+                            onPressed: () {
+                              if (timer!.isActive) {
+                                timer?.cancel();
+                                Timer(
+                                  const Duration(seconds: 2),
+                                  () {
+                                    index = 30;
+                                    no++;
+                                    categoryUser == 'user1'
+                                        ? rooms.doc(roomID).update({'no1': no})
+                                        : rooms.doc(roomID).update({'no2': no});
+                                    if (no == 11) {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => WinOrLoseScreen(
+                                              roomID, categoryUser, onLeaves),
+                                        ),
+                                      );
+                                    }
+                                    startCountDown();
+                                    setState(
+                                      () {
+                                        aColor = const Color.fromARGB(
+                                            255, 202, 221, 255);
+                                        bColor = const Color.fromARGB(
+                                            255, 202, 221, 255);
+                                        cColor = const Color.fromARGB(
+                                            255, 202, 221, 255);
+                                        dColor = const Color.fromARGB(
+                                            255, 202, 221, 255);
+                                        if (doubleScore == 2) {
+                                          doubleScore += 1;
+                                        }
+                                      },
+                                    );
+                                  },
+                                );
+                                if (topic['true'] == 'a') {
+                                  setState(() => aColor = Colors.green);
+                                  index >= 25
+                                      ? suns = 30
+                                      : index >= 20
+                                          ? suns = 25
+                                          : index >= 15
+                                              ? suns = 20
+                                              : index >= 10
+                                                  ? suns = 15
+                                                  : index >= 5
+                                                      ? suns = 10
+                                                      : suns = 5;
+                                  sumSuns += doubleScore == 2 ? suns * 2 : suns;
                                   categoryUser == 'user1'
-                                      ? rooms.doc(roomID).update({'no1': no})
-                                      : rooms.doc(roomID).update({'no2': no});
+                                      ? rooms
+                                          .doc(roomID)
+                                          .update({'suns1': sumSuns})
+                                      : rooms
+                                          .doc(roomID)
+                                          .update({'suns2': sumSuns});
+                                } else {
+                                  setState(() => aColor = Colors.red);
+                                }
+                              }
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: aColor,
+                              minimumSize: const Size(120, 42),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(15),
+                              ),
+                            ),
+                            child: FittedBox(
+                              fit: BoxFit.contain,
+                              child: Text(
+                                topic['a'],
+                                style: GoogleFonts.poppins(
+                                  color: const Color.fromARGB(255, 5, 33, 71),
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 18,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
+                        child: SizedBox(
+                          width: double.infinity,
+                          height: MediaQuery.of(context).size.height * 0.065,
+                          child: ElevatedButton(
+                            onPressed: () {
+                              if (timer!.isActive) {
+                                timer?.cancel();
+                                Timer(
+                                  const Duration(seconds: 2),
+                                  () {
+                                    index = 30;
+                                    no++;
+                                    categoryUser == 'user1'
+                                        ? rooms.doc(roomID).update({'no1': no})
+                                        : rooms.doc(roomID).update({'no2': no});
 
-                                  if (no == 11) {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => WinOrLoseScreen(
-                                            roomID, categoryUser, onLeaves),
-                                      ),
+                                    if (no == 11) {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => WinOrLoseScreen(
+                                              roomID, categoryUser, onLeaves),
+                                        ),
+                                      );
+                                    }
+                                    startCountDown();
+                                    setState(
+                                      () {
+                                        aColor = const Color.fromARGB(
+                                            255, 202, 221, 255);
+                                        bColor = const Color.fromARGB(
+                                            255, 202, 221, 255);
+                                        cColor = const Color.fromARGB(
+                                            255, 202, 221, 255);
+                                        dColor = const Color.fromARGB(
+                                            255, 202, 221, 255);
+                                        if (doubleScore == 2) {
+                                          doubleScore += 1;
+                                        }
+                                      },
                                     );
-                                  }
-                                  startCountDown();
-                                  setState(
-                                    () {
-                                      aColor = const Color.fromARGB(
-                                          255, 202, 221, 255);
-                                      bColor = const Color.fromARGB(
-                                          255, 202, 221, 255);
-                                      cColor = const Color.fromARGB(
-                                          255, 202, 221, 255);
-                                      dColor = const Color.fromARGB(
-                                          255, 202, 221, 255);
-                                      if (doubleScore == 2) {
-                                        doubleScore += 1;
-                                      }
-                                    },
-                                  );
-                                },
-                              );
-                              if (topic['true'] == 'a') {
-                                setState(() => aColor = Colors.green);
-                                index >= 25
-                                    ? suns = 30
-                                    : index >= 20
-                                        ? suns = 25
-                                        : index >= 15
-                                            ? suns = 20
-                                            : index >= 10
-                                                ? suns = 15
-                                                : index >= 5
-                                                    ? suns = 10
-                                                    : suns = 5;
-                                sumSuns += doubleScore == 2 ? suns * 2 : suns;
-                                categoryUser == 'user1'
-                                    ? rooms
-                                        .doc(roomID)
-                                        .update({'suns1': sumSuns})
-                                    : rooms
-                                        .doc(roomID)
-                                        .update({'suns2': sumSuns});
-                              } else {
-                                setState(() => aColor = Colors.red);
+                                  },
+                                );
+                                if (topic['true'] == 'b') {
+                                  setState(() => bColor = Colors.green);
+                                  index >= 25
+                                      ? suns = 40
+                                      : index >= 20
+                                          ? suns = 30
+                                          : index >= 15
+                                              ? suns = 20
+                                              : index >= 10
+                                                  ? suns = 15
+                                                  : index >= 5
+                                                      ? suns = 10
+                                                      : suns = 5;
+                                  sumSuns += doubleScore == 2 ? suns * 2 : suns;
+                                  categoryUser == 'user1'
+                                      ? rooms
+                                          .doc(roomID)
+                                          .update({'suns1': sumSuns})
+                                      : rooms
+                                          .doc(roomID)
+                                          .update({'suns2': sumSuns});
+                                } else {
+                                  setState(() => bColor = Colors.red);
+                                }
                               }
-                            }
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: aColor,
-                            minimumSize: const Size(120, 42),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(15),
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: bColor,
+                              minimumSize: const Size(120, 42),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(15),
+                              ),
                             ),
-                          ),
-                          child: FittedBox(
-                            fit: BoxFit.contain,
-                            child: Text(
-                              topic['a'],
-                              style: GoogleFonts.poppins(
-                                color: const Color.fromARGB(255, 5, 33, 71),
-                                fontWeight: FontWeight.w500,
-                                fontSize: 18,
+                            child: FittedBox(
+                              fit: BoxFit.contain,
+                              child: Text(
+                                topic['b'],
+                                style: GoogleFonts.poppins(
+                                  color: const Color.fromARGB(255, 5, 33, 71),
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 18,
+                                ),
                               ),
                             ),
                           ),
                         ),
                       ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
-                      child: SizedBox(
-                        width: double.infinity,
-                        height: MediaQuery.of(context).size.height * 0.065,
-                        child: ElevatedButton(
-                          onPressed: () {
-                            if (timer!.isActive) {
-                              timer?.cancel();
-                              Timer(
-                                const Duration(seconds: 2),
-                                () {
-                                  index = 30;
-                                  no++;
-                                  categoryUser == 'user1'
-                                      ? rooms.doc(roomID).update({'no1': no})
-                                      : rooms.doc(roomID).update({'no2': no});
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
+                        child: SizedBox(
+                          width: double.infinity,
+                          height: MediaQuery.of(context).size.height * 0.065,
+                          child: ElevatedButton(
+                            onPressed: () {
+                              if (timer!.isActive) {
+                                timer?.cancel();
+                                Timer(
+                                  const Duration(seconds: 2),
+                                  () {
+                                    index = 30;
+                                    no++;
+                                    categoryUser == 'user1'
+                                        ? rooms.doc(roomID).update({'no1': no})
+                                        : rooms.doc(roomID).update({'no2': no});
 
-                                  if (no == 11) {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => WinOrLoseScreen(
-                                            roomID, categoryUser, onLeaves),
-                                      ),
+                                    if (no == 11) {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => WinOrLoseScreen(
+                                              roomID, categoryUser, onLeaves),
+                                        ),
+                                      );
+                                    }
+                                    startCountDown();
+                                    setState(
+                                      () {
+                                        aColor = const Color.fromARGB(
+                                            255, 202, 221, 255);
+                                        bColor = const Color.fromARGB(
+                                            255, 202, 221, 255);
+                                        cColor = const Color.fromARGB(
+                                            255, 202, 221, 255);
+                                        dColor = const Color.fromARGB(
+                                            255, 202, 221, 255);
+                                        if (doubleScore == 2) {
+                                          doubleScore += 1;
+                                        }
+                                      },
                                     );
-                                  }
-                                  startCountDown();
-                                  setState(
-                                    () {
-                                      aColor = const Color.fromARGB(
-                                          255, 202, 221, 255);
-                                      bColor = const Color.fromARGB(
-                                          255, 202, 221, 255);
-                                      cColor = const Color.fromARGB(
-                                          255, 202, 221, 255);
-                                      dColor = const Color.fromARGB(
-                                          255, 202, 221, 255);
-                                      if (doubleScore == 2) {
-                                        doubleScore += 1;
-                                      }
-                                    },
-                                  );
-                                },
-                              );
-                              if (topic['true'] == 'b') {
-                                setState(() => bColor = Colors.green);
-                                index >= 25
-                                    ? suns = 40
-                                    : index >= 20
-                                        ? suns = 30
-                                        : index >= 15
-                                            ? suns = 20
-                                            : index >= 10
-                                                ? suns = 15
-                                                : index >= 5
-                                                    ? suns = 10
-                                                    : suns = 5;
-                                sumSuns += doubleScore == 2 ? suns * 2 : suns;
-                                categoryUser == 'user1'
-                                    ? rooms
-                                        .doc(roomID)
-                                        .update({'suns1': sumSuns})
-                                    : rooms
-                                        .doc(roomID)
-                                        .update({'suns2': sumSuns});
-                              } else {
-                                setState(() => bColor = Colors.red);
-                              }
-                            }
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: bColor,
-                            minimumSize: const Size(120, 42),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(15),
-                            ),
-                          ),
-                          child: FittedBox(
-                            fit: BoxFit.contain,
-                            child: Text(
-                              topic['b'],
-                              style: GoogleFonts.poppins(
-                                color: const Color.fromARGB(255, 5, 33, 71),
-                                fontWeight: FontWeight.w500,
-                                fontSize: 18,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
-                      child: SizedBox(
-                        width: double.infinity,
-                        height: MediaQuery.of(context).size.height * 0.065,
-                        child: ElevatedButton(
-                          onPressed: () {
-                            if (timer!.isActive) {
-                              timer?.cancel();
-                              Timer(
-                                const Duration(seconds: 2),
-                                () {
-                                  index = 30;
-                                  no++;
+                                  },
+                                );
+                                if (topic['true'] == 'c') {
+                                  setState(() => cColor = Colors.green);
+                                  index >= 25
+                                      ? suns = 40
+                                      : index >= 20
+                                          ? suns = 30
+                                          : index >= 15
+                                              ? suns = 20
+                                              : index >= 10
+                                                  ? suns = 15
+                                                  : index >= 5
+                                                      ? suns = 10
+                                                      : suns = 5;
+                                  sumSuns += doubleScore == 2 ? suns * 2 : suns;
                                   categoryUser == 'user1'
-                                      ? rooms.doc(roomID).update({'no1': no})
-                                      : rooms.doc(roomID).update({'no2': no});
-
-                                  if (no == 11) {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => WinOrLoseScreen(
-                                            roomID, categoryUser, onLeaves),
-                                      ),
-                                    );
-                                  }
-                                  startCountDown();
-                                  setState(
-                                    () {
-                                      aColor = const Color.fromARGB(
-                                          255, 202, 221, 255);
-                                      bColor = const Color.fromARGB(
-                                          255, 202, 221, 255);
-                                      cColor = const Color.fromARGB(
-                                          255, 202, 221, 255);
-                                      dColor = const Color.fromARGB(
-                                          255, 202, 221, 255);
-                                      if (doubleScore == 2) {
-                                        doubleScore += 1;
-                                      }
-                                    },
-                                  );
-                                },
-                              );
-                              if (topic['true'] == 'c') {
-                                setState(() => cColor = Colors.green);
-                                index >= 25
-                                    ? suns = 40
-                                    : index >= 20
-                                        ? suns = 30
-                                        : index >= 15
-                                            ? suns = 20
-                                            : index >= 10
-                                                ? suns = 15
-                                                : index >= 5
-                                                    ? suns = 10
-                                                    : suns = 5;
-                                sumSuns += doubleScore == 2 ? suns * 2 : suns;
-                                categoryUser == 'user1'
-                                    ? rooms
-                                        .doc(roomID)
-                                        .update({'suns1': sumSuns})
-                                    : rooms
-                                        .doc(roomID)
-                                        .update({'suns2': sumSuns});
-                              } else {
-                                setState(() => cColor = Colors.red);
+                                      ? rooms
+                                          .doc(roomID)
+                                          .update({'suns1': sumSuns})
+                                      : rooms
+                                          .doc(roomID)
+                                          .update({'suns2': sumSuns});
+                                } else {
+                                  setState(() => cColor = Colors.red);
+                                }
                               }
-                            }
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: cColor,
-                            minimumSize: const Size(120, 42),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(15),
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: cColor,
+                              minimumSize: const Size(120, 42),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(15),
+                              ),
                             ),
-                          ),
-                          child: FittedBox(
-                            fit: BoxFit.contain,
-                            child: Text(
-                              topic['c'],
-                              style: GoogleFonts.poppins(
-                                color: const Color.fromARGB(255, 5, 33, 71),
-                                fontWeight: FontWeight.w500,
-                                fontSize: 18,
+                            child: FittedBox(
+                              fit: BoxFit.contain,
+                              child: Text(
+                                topic['c'],
+                                style: GoogleFonts.poppins(
+                                  color: const Color.fromARGB(255, 5, 33, 71),
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 18,
+                                ),
                               ),
                             ),
                           ),
                         ),
                       ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
-                      child: SizedBox(
-                        width: double.infinity,
-                        height: MediaQuery.of(context).size.height * 0.065,
-                        child: ElevatedButton(
-                          onPressed: () {
-                            if (timer!.isActive) {
-                              timer?.cancel();
-                              Timer(
-                                const Duration(seconds: 2),
-                                () {
-                                  index = 30;
-                                  no++;
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
+                        child: SizedBox(
+                          width: double.infinity,
+                          height: MediaQuery.of(context).size.height * 0.065,
+                          child: ElevatedButton(
+                            onPressed: () {
+                              if (timer!.isActive) {
+                                timer?.cancel();
+                                Timer(
+                                  const Duration(seconds: 2),
+                                  () {
+                                    index = 30;
+                                    no++;
+                                    categoryUser == 'user1'
+                                        ? rooms.doc(roomID).update({'no1': no})
+                                        : rooms.doc(roomID).update({'no2': no});
+                                    startCountDown();
+                                    if (no == 11) {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => WinOrLoseScreen(
+                                              roomID, categoryUser, onLeaves),
+                                        ),
+                                      );
+                                    }
+                                    setState(
+                                      () {
+                                        aColor = const Color.fromARGB(
+                                            255, 202, 221, 255);
+                                        bColor = const Color.fromARGB(
+                                            255, 202, 221, 255);
+                                        cColor = const Color.fromARGB(
+                                            255, 202, 221, 255);
+                                        dColor = const Color.fromARGB(
+                                            255, 202, 221, 255);
+                                        if (doubleScore == 2) {
+                                          doubleScore += 1;
+                                        }
+                                      },
+                                    );
+                                  },
+                                );
+                                if (topic['true'] == 'd') {
+                                  setState(() => dColor = Colors.green);
+                                  index >= 25
+                                      ? suns = 40
+                                      : index >= 20
+                                          ? suns = 30
+                                          : index >= 15
+                                              ? suns = 20
+                                              : index >= 10
+                                                  ? suns = 15
+                                                  : index >= 5
+                                                      ? suns = 10
+                                                      : suns = 5;
+                                  sumSuns += doubleScore == 2 ? suns * 2 : suns;
                                   categoryUser == 'user1'
-                                      ? rooms.doc(roomID).update({'no1': no})
-                                      : rooms.doc(roomID).update({'no2': no});
-                                  startCountDown();
-                                  if (no == 11) {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => WinOrLoseScreen(
-                                            roomID, categoryUser, onLeaves),
-                                      ),
-                                    );
-                                  }
-                                  setState(
-                                    () {
-                                      aColor = const Color.fromARGB(
-                                          255, 202, 221, 255);
-                                      bColor = const Color.fromARGB(
-                                          255, 202, 221, 255);
-                                      cColor = const Color.fromARGB(
-                                          255, 202, 221, 255);
-                                      dColor = const Color.fromARGB(
-                                          255, 202, 221, 255);
-                                      if (doubleScore == 2) {
-                                        doubleScore += 1;
-                                      }
-                                    },
-                                  );
-                                },
-                              );
-                              if (topic['true'] == 'd') {
-                                setState(() => dColor = Colors.green);
-                                index >= 25
-                                    ? suns = 40
-                                    : index >= 20
-                                        ? suns = 30
-                                        : index >= 15
-                                            ? suns = 20
-                                            : index >= 10
-                                                ? suns = 15
-                                                : index >= 5
-                                                    ? suns = 10
-                                                    : suns = 5;
-                                sumSuns += doubleScore == 2 ? suns * 2 : suns;
-                                categoryUser == 'user1'
-                                    ? rooms
-                                        .doc(roomID)
-                                        .update({'suns1': sumSuns})
-                                    : rooms
-                                        .doc(roomID)
-                                        .update({'suns2': sumSuns});
-                              } else {
-                                setState(() => dColor = Colors.red);
+                                      ? rooms
+                                          .doc(roomID)
+                                          .update({'suns1': sumSuns})
+                                      : rooms
+                                          .doc(roomID)
+                                          .update({'suns2': sumSuns});
+                                } else {
+                                  setState(() => dColor = Colors.red);
+                                }
                               }
-                            }
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: dColor,
-                            minimumSize: const Size(120, 42),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(15),
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: dColor,
+                              minimumSize: const Size(120, 42),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(15),
+                              ),
                             ),
-                          ),
-                          child: FittedBox(
-                            fit: BoxFit.contain,
-                            child: Text(
-                              topic['d'],
-                              style: GoogleFonts.poppins(
-                                color: const Color.fromARGB(255, 5, 33, 71),
-                                fontWeight: FontWeight.w500,
-                                fontSize: 18,
+                            child: FittedBox(
+                              fit: BoxFit.contain,
+                              child: Text(
+                                topic['d'],
+                                style: GoogleFonts.poppins(
+                                  color: const Color.fromARGB(255, 5, 33, 71),
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 18,
+                                ),
                               ),
                             ),
                           ),
                         ),
                       ),
-                    ),
-                  ],
-                ),
-              );
-            }).toList(),
+                    ],
+                  ),
+                );
+              },
+            ).toList(),
           );
         }
         return const Text('No data');
       },
     );
+
     Widget helpButton = Padding(
       padding: const EdgeInsets.fromLTRB(15, 0, 15, 10),
       child: Column(
