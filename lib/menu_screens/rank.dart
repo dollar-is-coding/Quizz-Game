@@ -111,60 +111,61 @@ class RankScreenState extends State<RankScreen> {
     Widget listViewSection = Padding(
       padding: const EdgeInsets.fromLTRB(15, 0, 15, 5),
       child: StreamBuilder(
-          stream: _ranks
-              .where('date',
-                  isEqualTo: '${today.day}-${today.month}-${today.year}')
-              //.orderBy('suns', descending: true)
-              .snapshots(),
-          builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-            if (snapshot.hasData) {
-              int i = 0;
-              return ListView(
-                children: snapshot.data!.docs
-                    .map(
-                      (rank) => Card(
-                        color: const Color.fromARGB(255, 202, 221, 255),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: Container(
-                          alignment: Alignment.center,
-                          child: ListTile(
-                            leading: CircleAvatar(
-                              backgroundColor:
-                                  const Color.fromARGB(255, 202, 221, 255),
-                              radius: 20,
-                              child: Text(
-                                '${++i}',
-                                style: GoogleFonts.poppins(
-                                  color: const Color.fromARGB(255, 5, 33, 71),
-                                  fontWeight: FontWeight.w600,
-                                ),
+        stream: _ranks
+            // .where('date',
+            //     isEqualTo: '${today.day}-${today.month}-${today.year}')
+            .orderBy('suns', descending: true)
+            .snapshots(),
+        builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+          if (snapshot.hasData) {
+            int i = 0;
+            return ListView(
+              children: snapshot.data!.docs
+                  .map(
+                    (rank) => Card(
+                      color: const Color.fromARGB(255, 202, 221, 255),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Container(
+                        alignment: Alignment.center,
+                        child: ListTile(
+                          leading: CircleAvatar(
+                            backgroundColor:
+                                const Color.fromARGB(255, 202, 221, 255),
+                            radius: 20,
+                            child: Text(
+                              '${++i}',
+                              style: GoogleFonts.poppins(
+                                color: const Color.fromARGB(255, 5, 33, 71),
+                                fontWeight: FontWeight.w600,
                               ),
                             ),
-                            title: Text(
-                              rank['user'],
-                              style: GoogleFonts.poppins(
-                                fontSize: 16,
-                                color: const Color.fromARGB(255, 5, 33, 71),
-                              ),
+                          ),
+                          title: Text(
+                            rank['user'],
+                            style: GoogleFonts.poppins(
+                              fontSize: 16,
+                              color: const Color.fromARGB(255, 5, 33, 71),
                             ),
-                            trailing: Text(
-                              rank['suns'].toString(),
-                              style: GoogleFonts.poppins(
-                                fontSize: 16,
-                                color: const Color.fromARGB(255, 5, 33, 71),
-                              ),
+                          ),
+                          trailing: Text(
+                            rank['suns'].toString(),
+                            style: GoogleFonts.poppins(
+                              fontSize: 16,
+                              color: const Color.fromARGB(255, 5, 33, 71),
                             ),
                           ),
                         ),
                       ),
-                    )
-                    .toList(),
-              );
-            }
-            return Text('No Data');
-          }),
+                    ),
+                  )
+                  .toList(),
+            );
+          }
+          return Text('No Data');
+        },
+      ),
     );
     return Scaffold(
       appBar: AppBar(
